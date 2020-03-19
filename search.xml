@@ -4,26 +4,325 @@
   
     
     <entry>
-      <title>test</title>
-      <link href="/2019/12/02/test/"/>
-      <url>/2019/12/02/test/</url>
+      <title>决策树和随机森林</title>
+      <link href="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
+      <url>/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<p>年龄太大？不见</p><p>长得不好看？不见</p><p>收入太低？不见</p><p>…</p><p>人们在相亲的时候难免会做出以上的决策，当然，爱美之心人皆有之，而且人人都有追求更好物质生活的精神生活的权利。</p><a id="more"></a><h3 id="1-什么是决策树"><a href="#1-什么是决策树" class="headerlink" title="1. 什么是决策树"></a>1. 什么是决策树</h3><p>如果把相亲的决策过程可视化，可以得到下面的图：</p><img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/%E7%9B%B8%E4%BA%B2%E5%86%B3%E7%AD%96%E6%A0%91.png" class=""><p><img src="C:\work\blog\source\_posts\决策树\相亲决策树.png" alt=""></p><p><center style="font-size: 16px">图1. 可视化决策过程</center><br>图中黄色部分表示判断依据，依次按照年龄、长相、收入、是否是公务员4个方面进行决策，最终得出“见”或者“不见”的结论。</p><p>此过程长得很像一棵树，所以我们把这种决策方法叫做<strong>决策树</strong>。</p><h3 id="2-使用决策树"><a href="#2-使用决策树" class="headerlink" title="2. 使用决策树"></a>2. 使用决策树</h3><h5 id="2-1-分类问题"><a href="#2-1-分类问题" class="headerlink" title="2.1 分类问题"></a>2.1 分类问题</h5><p>下面看一个比较具体的问题，下表记录了两个星期内的天气、湿度、风级状况，以及小明是否外出打球：</p><div class="table-container"><table><thead><tr><th>日期</th><th>天气</th><th>湿度</th><th>风级</th><th>是否打球</th></tr></thead><tbody><tr><td>1</td><td>晴</td><td>高</td><td>弱</td><td>否</td></tr><tr><td>2</td><td>晴</td><td>高</td><td>强</td><td>否</td></tr><tr><td>3</td><td>阴</td><td>高</td><td>弱</td><td>是</td></tr><tr><td>4</td><td>雨</td><td>高</td><td>弱</td><td>是</td></tr><tr><td>5</td><td>雨</td><td>正常</td><td>弱</td><td>是</td></tr><tr><td>6</td><td>雨</td><td>正常</td><td>强</td><td>否</td></tr><tr><td>7</td><td>阴</td><td>正常</td><td>强</td><td>是</td></tr><tr><td>8</td><td>晴</td><td>高</td><td>弱</td><td>否</td></tr><tr><td>9</td><td>晴</td><td>正常</td><td>弱</td><td>是</td></tr><tr><td>10</td><td>雨</td><td>正常</td><td>弱</td><td>是</td></tr><tr><td>11</td><td>晴</td><td>正常</td><td>强</td><td>是</td></tr><tr><td>12</td><td>阴</td><td>高</td><td>强</td><td>是</td></tr><tr><td>13</td><td>阴</td><td>正常</td><td>弱</td><td>是</td></tr><tr><td>14</td><td>雨</td><td>高</td><td>强</td><td>否</td></tr></tbody></table></div><p>现在要求是给出任意的天气、湿度、风级条件，预测出小明是否会出门打球。</p><h5 id="2-2-信息熵"><a href="#2-2-信息熵" class="headerlink" title="2.2 信息熵"></a>2.2 信息熵</h5><p>我们希望画出一课类似图1中的决策树，那么首先需要找到一个特征作为判断依据，这里的特征有三个：</p><ul><li>天气</li><li>湿度</li><li>风级</li></ul><p>显然，先选天气作为判断依据，和先选湿度作为判断依据，得到的决策树肯定是不同的。那么既然能得到很多颗决策树，那一颗数比较好呢？</p><p>下面先按照天气划分：</p><img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/%E6%8C%89%E7%85%A7%E5%A4%A9%E6%B0%94%E5%88%92%E5%88%86.png" class=""><p><img src="C:\work\blog\source\_posts\决策树\按照天气划分.png" alt=""></p><p><center style="font-size: 16px">图2. 按照天气划分</center><br>如何衡量这种划分策略的好坏？</p><p>以所有晴天的数据为例，一共有5个晴天，其中2天小明出去打球，3天没有，那么可以认为在天晴时，小明外出打球的概率为：</p><script type="math/tex; mode=display">P(打球|天晴)=\frac2{2+3}=0.4\tag 1</script><p>考虑下面这个函数：</p><script type="math/tex; mode=display">H(p)=-plnp-(1-p)ln(1-p)\tag 2</script><p>其中p为事件A发生的概率，这个函数的图像为：</p><img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/entropy.png" class=""><p><img src="C:\work\blog\source\_posts\决策树\entropy.png" alt=""></p><p><center style="font-size: 16px">图3. 信息熵图像</center><br>可以看到，当p为0时，表示事件A不可能发生，此时函数值为0，同样的，当p为1时，表示事件A一定发生，函数值为0。而当p为0.5时，表示事件A发生的概率和不发生的概率相同，函数值达到最大。</p><p>这个函数可以用来度量<strong>事件的不确定性</strong>。当p为0或1时，确定发生或者不发生，确定性最大，所以不确定性最小；反之，p为0.5时不确定性最大。</p><p>回到天气划分上，天晴的情况下，小明出门打球的概率为0.4，不确定性比较高，而我们希望不确定性越低越好，从而得到更加精确的决策结果。</p><p>式（2）中的H(p)叫做<strong>信息熵</strong>，用于度量信息的不确定性。</p><p>这样一来，我们选择某个特征的标准就是：</p><ul><li>特征的熵最小</li></ul><h5 id="2-3-特征的信息熵"><a href="#2-3-特征的信息熵" class="headerlink" title="2.3 特征的信息熵"></a>2.3 特征的信息熵</h5><p>令“小明出门打球”为事件A，天气特征为C，其中：</p><script type="math/tex; mode=display">C=\{C_1,C_2,...,C_n\}\tag 3</script><p>C<sub>i</sub>为特征的所有可能取值。</p><p>在C<sub>i</sub>情况下的信息熵为：</p><script type="math/tex; mode=display">H(A,C_i)=-P(A|C_i)*lnP(A|C_i)-\big(1-P(A|C_i)\big)ln\big(1-P(A|C_i)\big)\tag 4</script><p>而这仅仅是特征中一个取值的熵，那么特征C的总信息熵可以定义为：</p><script type="math/tex; mode=display">H(A,C)=\sum_{i=1}^nH(A,C_i)\cdot w_i\tag 5</script><p>其中ω<sub>i</sub>为特征中各个取值C<sub>i</sub>的权重，假设总样本量为n，有j个样本取值为C<sub>i</sub>，那么：</p><script type="math/tex; mode=display">w_i=\frac jn</script><p>这样一来，就可以度量每一个特征的不确定性，选择其中不确定性最小的一个，座位此次划分的标准。</p><p><strong><em>此策略是贪心策略，并不能保证全局最优</em></strong></p><h5 id="2-4-信息增益和信息增益比"><a href="#2-4-信息增益和信息增益比" class="headerlink" title="2.4 信息增益和信息增益比"></a>2.4 信息增益和信息增益比</h5><p>信息增益定义为：</p><script type="math/tex; mode=display">Gain(A, C)=H(A)-H(A,C)\tag 6</script><p>表示以C作为判别条件，新的信息熵相较于之前的信息熵下降的幅度。显然，信息增益越大，表示不确定性下降的越多，说明特征选取越好。</p><p>现在假设有n个样本，条件C有n中取值，将样本分为n类，每类只有一个样本。那么这种情况下，特征C的熵为0，因为每种取值的熵都为0。这是我们不愿意看到的情况：<strong>过拟合</strong></p><p>如果以信息增益为判断标准，那么这种可能导致过拟合的特征因为其信息增益最大，所以首当其冲。这并不是我们想看到的。</p><p>于是给这些特征一个限制条件，定义<strong>信息增益比</strong>：</p><script type="math/tex; mode=display">GainRatio(A, C)=\frac {Gain(A,C)}{H(A, C)}\tag 7</script><p>将信息增益比作为新的判断条件，需要给出合适的区间（比值太大和太小都不行），这样能排除掉会过拟合的情况，也能保证信息增益较高。</p><h5 id="2-5-特征连续的决策边界选取"><a href="#2-5-特征连续的决策边界选取" class="headerlink" title="2.5 特征连续的决策边界选取"></a>2.5 特征连续的决策边界选取</h5><p>上面的讨论是建立在特征的取值属于一个集合的情况，那么如果特征取值是一个数值（特征连续）该如何？</p><p>看下图：</p><p><img src="C:\work\blog\source\_posts\决策树\决策边界选取.png" alt="决策边界选取"></p><p><center style="font-size: 16px">图4. 决策边界选取</center><br>有4个样本点，点关于特征C的取值为x<sub>1</sub>到x<sub>4</sub>，样本点两两之间的距离为d<sub>1</sub>，d<sub>2</sub>，d<sub>3</sub>。</p><p>两个相邻的样本点之间不存在样本点，所以相邻间隔区域的中点b<sub>1</sub>，b<sub>2</sub>，b<sub>3</sub>可以作为候选决策边界。在b<sub>1</sub>，b<sub>2</sub>，b<sub>3</sub>中选择不确定性最小的边界作为最终的决策边界。</p><p>这样有一个问题，如果样本数量非常多，那么候选决策边界也会非常多，要是计算每个候选决策边界的熵值，计算成本太高。所以通常的做法是随机选取若干个候选决策边界，找出其中最好的一个。</p><h3 id="3-随机森林"><a href="#3-随机森林" class="headerlink" title="3. 随机森林"></a>3. 随机森林</h3><p>为了解决过拟合问题，现采用有放回的采样方式。</p><p>假设有样本：</p><script type="math/tex; mode=display">X=\{(X_1,y_1),(X_2,y_2),...,(X_n,y_n)\}</script><p>从中有放回地采样m次, 每次取k个，每次的样本为：</p><script type="math/tex; mode=display">X_m=\{(X_{m1},y_{m1}),(X_{m2}y_{m2}),...,(X_{mk},y_{mk})\}</script><p>每次的采样结果对应一个决策树DT<sub>m</sub>，这些决策树组成了一个集合：</p><script type="math/tex; mode=display">RF(X)=\{DT_1,DT_2,...,DT_m\}</script><p>这个集合叫做<strong>随机森林</strong>。</p><p>当一个测试点进入随机森林之后，会通过森林中所有的决策树，每棵决策树对应一个分类结果。然后根据少数服从多数的原则，分类结果中频数最高的为最终分类结果。</p><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul><li>决策树/随机森林的逻辑比较简单，也许效果不是最好，但是可以作为对数据分布探索的首要尝试算法</li><li>没有谈到代码实现部分，以后会补上</li></ul>]]></content>
       
       
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
       
     </entry>
     
     
     
     <entry>
-      <title>Hello World</title>
-      <link href="/2019/12/02/hello-world/"/>
-      <url>/2019/12/02/hello-world/</url>
+      <title>对SVM的一些理解</title>
+      <link href="/2020/02/29/SVM/"/>
+      <url>/2020/02/29/SVM/</url>
       
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo server</span></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo generate</span></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+        <content type="html"><![CDATA[<p>20世纪90年代曾经制霸机器学习届的SVM，虽然如今风光不再，但是其思想和推导过程仍十分值得学习，所谓温故而知新。</p><a id="more"></a><h3 id="1-更好地分类"><a href="#1-更好地分类" class="headerlink" title="1. 更好地分类"></a>1. 更好地分类</h3><p>先看一个简单的分类问题：</p><img src="/2020/02/29/SVM/%E4%BA%8C%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98.png" class="" title="简单的二分类问题"><p><img src="C:\work\blog\source\_posts\SVM\二分类问题.png" alt=""></p><p><center style="font-size: 16px">图1. 简单的二分类问题</center><br>如上图所示，-表示负样本，+表示正样本。</p><p>有三条分界线a，b，c，直观上来看，将b作为分界线效果更好，因为这样容错率更高。</p><p>假设以a为分界线，那么如果负样本观测值因为噪声存在而有所偏差，则很有可能会将这个负样本误判为正样本；同理，以c为分界线也会导致相同的问题。</p><p>那么可以这么理解：决策边界的容错率更高，鲁棒性更好，那么我们认为这个边界效果更好。</p><h3 id="2-让街道最宽"><a href="#2-让街道最宽" class="headerlink" title="2. 让街道最宽"></a>2. 让街道最宽</h3><p>现在来寻找一个最好的决策边界，体现在图1中就是：</p><ul><li>决策边界离样本点尽可能远</li><li>公平起见，距离正负样本距离相同</li></ul><p>也就是说，要使下图的阴影部分宽度最大：</p><img src="/2020/02/29/SVM/%E8%A1%97%E5%AE%BD.png" class="" title="阴影部分"><p><img src="C:\work\blog\source\_posts\SVM\街宽.png" alt="街宽"></p><p><center style="font-size: 16px">图2. 阴影部分</center><br>为了方便起见，后面将这里的阴影部分称作<strong>街道</strong>。</p><p>那么如何让街道最宽呢？</p><p>现有直线L：</p><script type="math/tex; mode=display">\begin{split}&L:\omega^Tx+b=0\\&\omega=(\omega_1,\omega_2)^T\\&x=(x_1, x_2)^T\end{split}\tag 1</script><p>平移直线L，记下L最后一次与负样本相交的位置，以及第一次与正样本相交的位置，那么L在这两个对应的直线为M，N：</p><script type="math/tex; mode=display">\begin{split}M&:\omega^Tx+b=m\\[2ex]N&:\omega^Tx+b=n\end{split}\tag 2</script><p>那么此时MN之间的距离就是街宽。</p><p>接着找到直线B，使得B到M和N的距离相等，令B：</p><script type="math/tex; mode=display">B:\omega^Tx+b = 0\tag 3</script><p>那么M，N为：</p><script type="math/tex; mode=display">\begin{split}M&:\omega^Tx+b=-k\\[2ex]N&:\omega^Tx+b=k\end{split}</script><p>具体情形见下图：</p><img src="/2020/02/29/SVM/%E6%9C%80%E5%A4%A7%E8%A1%97%E5%AE%BD.png" class=""><p><img src="C:\work\blog\source\_posts\SVM\最大街宽.png" alt=""></p><p><center style="font-size: 16px">图3. 最大街宽</center><br>此时的决策边界就是直线B。</p><p>两边同时乘相同的值，直线解析式不变，对于M和N，两边同时乘1/k，可以得到：</p><script type="math/tex; mode=display">\begin{split}M&:\frac{\omega^Tx - b}k = -1\\[2ex]N&:\frac{\omega^Tx - b}k = 1\\[2ex]\end{split}\tag 4</script><p>令：</p><script type="math/tex; mode=display">(\omega^T)'=\frac{\omega^T}k\ \ \ ,\ \ \ b'=\frac bk</script><p>有：</p><script type="math/tex; mode=display">\begin{split}M'&:(\omega^T)'x+b'=-1\\[2ex]N'&:(\omega^T)'x+b'=1\end{split}\tag 5</script><p>显然，M和M’以及N和N’是同样的直线，这里为了表示方便，依然用原来的参数，所以：</p><script type="math/tex; mode=display">\begin{split}M&:\omega^Tx+b=-1\\[2ex]N&:\omega^Tx+b=1\end{split}</script><p><strong><em>PS：这里使直线解析式右侧为1/-1有两个原因。第一，如果不加以限制，等比缩放ω和b的话，有无数种可能的解析式，所以这里将其限制住，使得只能得出一种解析式。第二，固定为1/-1是为了方便计算。</em></strong></p><p><strong>落在M和N上的点成为支持向量</strong></p><p>获得街道区域之后，不难发现，此时训练集中的样本满足：</p><script type="math/tex; mode=display">\left \{\begin{array}{c}\omega^Tx+b\ge1,\ \ \ \ \ \ y=1\\[3ex]\omega^Tx+b\le-1,\ \ \ \ y=-1\end{array}\right.\tag 6</script><p>令：</p><script type="math/tex; mode=display">y_i=\left \{\begin{array}{c}1，x_i为正样本\\[3ex]-1，x_i为负样本\end{array}\right.\tag 7</script><p>则样本满足：</p><script type="math/tex; mode=display">y_i(\omega^Tx+b)-1\ge0\tag 8</script><h3 id="3-计算道路宽度"><a href="#3-计算道路宽度" class="headerlink" title="3. 计算道路宽度"></a>3. 计算道路宽度</h3><p>如图：</p><img src="/2020/02/29/SVM/%E8%AE%A1%E7%AE%97%E8%A1%97%E9%81%93%E5%AE%BD%E5%BA%A6.png" class=""><p><img src="C:\work\blog\source\_posts\SVM\计算街道宽度.png" alt=""></p><p><center style="font-size: 16px">图4. 计算街道宽度</center><br>其中A，B分别是直线M，N上的点，过点A做直线N的垂线交N于点P，那么街道宽度AP的长度为：</p><script type="math/tex; mode=display">\begin{split}AP&=\vec {AB}\cdot \frac {\omega^T}{|\omega^T|}\\&=(\vec{OB}-\vec{OA})\cdot \frac {\omega^T}{|\omega^T|}\\&=\vec{OB}\cdot \frac {\omega^T}{|\omega^T|}-\vec{OA}\cdot \frac {\omega^T}{|\omega^T|}\end{split}\tag 9</script><p>因为A，B在M，N上，所以有：</p><script type="math/tex; mode=display">\left \{\begin{array}{c}\omega^T \cdot\vec {OB} + b-1=0 \\-\omega^T \cdot\vec {OA} - b-1=0\end{array}\right.\tag {10}</script><p>即：</p><script type="math/tex; mode=display">\left \{\begin{array}{c}\omega^T \cdot\vec {OB}=1-b \\\omega^T \cdot\vec {OA}=-b-1\end{array}\right.\tag {11}</script><p>所以：</p><script type="math/tex; mode=display">\begin{split}AP&=\frac1{|\omega^T|}\cdot(1-b+b+1) \\&=\frac2{|\omega^T|}\end{split}\tag {12}</script><p>至此，得到了街道的宽度，不难发现街道的宽度只和ω有关，和数据集无关。</p><p>那么接下来的任务就是让街道尽可能地宽，即求：</p><script type="math/tex; mode=display">max(\frac2{|\omega^T|})\Rightarrow min(|\omega^T|)</script><p>为了后续计算方便，优化任务变为：</p><script type="math/tex; mode=display">\begin{split}&min(\frac12|\omega^T|^2)\\[2ex]&s.t.\ \ \ \  y_i(\omega^T \cdot x + b)-1\ge0\end{split}\tag {13}</script><h3 id="4-朗格朗日"><a href="#4-朗格朗日" class="headerlink" title="4. 朗格朗日"></a>4. 朗格朗日</h3><p>根据拉格朗日定理，式（13）可转化为求：</p><script type="math/tex; mode=display">L=\frac12|\omega^T|^2-\sum_{i=0}^n\alpha_i\big(y_i(\omega^T\cdot x_i+b)-1\big)\tag {14}</script><p>的极小值。</p><p>对ω和b求偏导，求得极值点为：</p><script type="math/tex; mode=display">\left \{\begin{array}{c}w^*=\sum_{i=1}^n\alpha_iy_ix_i\\[2ex]\sum_{i=1}^n\alpha_iy_i=0\end{array}\right.\tag {15}</script><p>将式（15）代入（14）得：</p><script type="math/tex; mode=display">\begin{split}L&=\sum_{i=i}^n\alpha_i-\frac 12\sum_{i=1}^n\alpha_iy_ix_i\ \cdot\sum_{j=1}^n\alpha_jy_jx_j\\&=\sum_{i=i}^n\alpha_i-\frac 12\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_jx_ix_j\end{split}\tag {16}</script><p>其中α为超参数，y为样本观测值，y∈{-1, 1}，所以要求L，关键在于x<sub>i</sub>·x<sub>j</sub>的值。</p><h3 id="5-核函数"><a href="#5-核函数" class="headerlink" title="5. 核函数"></a>5. 核函数</h3><p>上述的一切都发生在二维平面中，而且假设了存在一条直线可以正确地将正负样本分类。那么如果没有这样一条直线能正确分类样本呢？</p><p>假设这样一种情况，现有如下样本：</p><img src="/2020/02/29/SVM/%E4%BA%8C%E7%BB%B4%E4%B8%8D%E5%8F%AF%E5%88%86.png" class=""><p><img src="C:\work\blog\source\_posts\SVM\二维不可分.png" alt=""></p><p><center style="font-size: 16px">图5. 二维不可分</center><br>很明显，没有一条直线能够将正负样本一份为二，那么，如果这些点在三维空间中呢？如下图：</p><img src="/2020/02/29/SVM/%E4%B8%89%E7%BB%B4%E5%8F%AF%E5%88%86.png" class=""><p><img src="C:\work\blog\source\_posts\SVM\三维可分.png" alt=""></p><p><center style="font-size: 16px">图6. 三维可分</center><br>将二维空间中的点映射到三维空间中，假设映射结果为上图。其中负样本全部在红色平面靠里（x坐标小于平面x坐标），正样本全部在蓝色平面朝外（x坐标大于平面坐标），且两个平面平行，这样的话，任何一个平行于这两个平面，且在两者之间的平面，都可以作为分隔正负样本的<strong>超平面</strong>。</p><p>将数据从二维映射到三维，成功地用一个平面正确分割。</p><p>那么，只需要找到这个映射关系，向更高维映射，我们就能找到一个超平面，二分类样本。</p><p>假设有映射关系：</p><script type="math/tex; mode=display">\Phi(x)=x'\\x=(x_1,x_2...,x_n)\\x'=(x_1',x_2',...,x_m')</script><p>结合式（16），得：</p><script type="math/tex; mode=display">L=\sum_{i=i}^n\alpha_i-\frac 12\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_jy_iy_j\Phi(x_i)\Phi(x_j)</script><p>观察发现，要求得L，并不需要求出映射关系，只需要知道映射之后的两个点的內积即可。</p><p>所以大名鼎鼎的<strong>核函数</strong>就诞生了，核函数就定义为：</p><script type="math/tex; mode=display">kernal(x_i, x_j)=\Phi(x_i)\Phi(x_j)</script><p>于是不需要具体映射关系，只需要给出核函数，就可以求得L。</p><h3 id="6-凸优化"><a href="#6-凸优化" class="headerlink" title="6. 凸优化"></a>6. 凸优化</h3><p>给定核函数后，可以将原来的问题转化为一个凸优化问题，具体操作过程在此不进行赘述。</p><h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h3><ul><li>本文谈了自己对SVM模型从无到有的过程的理解，略去了凸优化求解的过程。是因为凸优化问题又是一门学问，想搞清楚并非朝夕之事，所以想把精力集中在堆模型本身的理解上。</li><li>今后也会刻意简化优化过程，而注重于对模型、算法本身的理解。</li><li>加入了用visio画的图，因为发现python不能画出所以自己想要表达的东西</li></ul>]]></content>
       
       
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>逻辑回归</title>
+      <link href="/2020/02/26/logistic-regression/"/>
+      <url>/2020/02/26/logistic-regression/</url>
+      
+        <content type="html"><![CDATA[<p>逻辑回归常用于分类问题，和线性回归不同的是，前者需要对结果进行分类，而后者是抽象出模型来表征整个数据集。</p><a id="more"></a><h3 id="1-分类问题"><a href="#1-分类问题" class="headerlink" title="1. 分类问题"></a>1. 分类问题</h3><img src="/2020/02/26/logistic-regression/score1-score2.png" class=""><p><img src="C:\work\blog\source\_posts\logistic-regression\score1-score2.png" alt=""></p><center style="font-size: 16px">图1. 样本点</center><p>上图是某班级100个学生两门考试成绩情况，横轴表示第一门考试成绩，纵轴表示第二门，+表示此次考试通过，圆点表示未通过。</p><p>现在给定一个学生的成绩，希望预测该学生能否通过此考试。</p><h3 id="2-逻辑回归"><a href="#2-逻辑回归" class="headerlink" title="2. 逻辑回归"></a>2. 逻辑回归</h3><p>把通过的样本作为正样本，样本结果为1，未通过的样本视为负样本，样本结果为0。</p><p>逻辑回归的任务是训练一个分类器，把学生成绩输入这个分类器，会得到一个0-1之间的数p，p表示这个成绩属于正样本的概率（在这里，就是该同学通过考试的概率）。</p><p>不难判断，当p&gt;0.5时，我们认为该学生通过考试，否则认为没有通过。</p><p>那么逻辑回归是如何做到这些的呢？</p><h5 id="2-1-sigmoid函数"><a href="#2-1-sigmoid函数" class="headerlink" title="2.1 sigmoid函数"></a>2.1 sigmoid函数</h5><p>sigmoid函数，表达式如下：</p><script type="math/tex; mode=display">S(x) = \frac 1{1 + e^{-x}}\tag 1</script><p>函数图像如下：</p><img src="/2020/02/26/logistic-regression/sigmoid.png" class=""><p><img src="C:\work\blog\source\_posts\logistic-regression\sigmoid.png" alt=""></p><center style="font-size: 16px">图2. sigmoid曲线</center><p>当x足够大时，函数值接近1，x足够小时，函数值接近0，而当x=0时，函数值为0.5。</p><p>这样的话，无论向函数内输入什么样的值，函数输出总是在0-1之间，符合期望。</p><p><strong>之前我有一个疑惑，就是为什么要用sigmoid函数将结果转化为0-1之间的数，现在发现原来是因为正负样本的样本值分别为1和0，如果预测值不转换成0-1之间的数的话，很难计算损失。</strong></p><h5 id="2-2-损失函数"><a href="#2-2-损失函数" class="headerlink" title="2.2 损失函数"></a>2.2 损失函数</h5><p>逻辑回归的损失函数如下：</p><script type="math/tex; mode=display">J(\theta) = \frac 1m\sum_{i=1}^m[-y_iln(h_\theta(x_i)) - (1-y_i)ln(1-h_\theta(x_i))]\tag 2</script><p>向量化之后为：</p><script type="math/tex; mode=display">J(\theta) = -\frac1m\big((ln(g(X\theta))^Ty + (ln(1-g(X\theta))^T(1-y))\big)\tag 3</script><p>其中：</p><script type="math/tex; mode=display">h_\theta(x) = g(\theta^Tx)\tag 4</script><script type="math/tex; mode=display">g(z) = \frac1{1+e^{-z}}\tag 5</script><p>如果采用均方误差，损失函数将不是一个凸函数，所以这里改变了损失函数的形式。</p><p>当样本值为1时，损失函数为：</p><script type="math/tex; mode=display">J(\theta) = \frac 1m\sum_{i=1}^m[-ln(h_\theta(x_i))]\tag 6</script><p>大约长这个样子</p><img src="/2020/02/26/logistic-regression/loss-1.png" class=""><p><img src="C:\work\blog\source\_posts\logistic-regression\loss-1.png" alt=""></p><center style="font-size: 16px">图3. 正样本损失函数</center><p>其中横轴为预测值，纵轴为损失。可以看到当预测值x接近0时，损失变得非常大，此时样本值为1，所以这种情况符合预期。</p><p>同样的，当样本值为0时，损失图像大概是这样：</p><img src="/2020/02/26/logistic-regression/loss-0.png" class=""><p><img src="C:\work\blog\source\_posts\logistic-regression\loss-0.png" alt=""></p><center style="font-size: 16px">图4. 负样本损失函数</center><p>当预测值接近1时，损失变得很大，符合预期。</p><h5 id="2-3-梯度下降"><a href="#2-3-梯度下降" class="headerlink" title="2.3 梯度下降"></a>2.3 梯度下降</h5><p>梯度下降之前已经讨论过，这里不做过多赘述，第j个参数的偏导如下：</p><script type="math/tex; mode=display">\frac{\delta J(\theta)}{\delta \theta_j}=\frac 1m\sum_{i=1}^m(h_\theta(x_i)-y_i)x_{ij}\tag 7</script><p>转换为向量形式为：</p><script type="math/tex; mode=display">\frac{\delta J(\theta)}{\delta \theta_j}=\frac 1mX^T(g(X\theta)-y)\tag 8</script><p>乍一看这里的（7）式，有些难以理解，那么多ln的式子，求导怎么能得到这个？于是决定</p><h3 id="3-推导偏导数"><a href="#3-推导偏导数" class="headerlink" title="3. 推导偏导数"></a>3. 推导偏导数</h3><script type="math/tex; mode=display">\begin{equation}\begin{split}\frac{\delta J(\theta)}{\delta \theta_j}&=-\frac1m\sum_{i=1}^m\big(\frac{y_i}{h_\theta(x_i)}\cdot\frac\delta{\delta\theta_j}h_\theta(x_i)-(1-\frac{1-y_i}{1-h_\theta(x_i)})\cdot\frac\delta{\delta\theta_j}h_\theta(x_i))\big) \\&=-\frac1m\sum_{i=1}^m\big(\frac{y_i}{h_\theta(x_i)}-\frac{1-y_i}{1-h_\theta(x_i)}\big)\cdot\frac\delta{\delta\theta_j}g(\theta^Tx_i)\end{split}\end{equation}\tag 9</script><p>而：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}\frac\delta{\delta\theta_j}g(\theta^Tx_i)&=\frac\delta{\delta\theta_j}\frac1{1+e^{-\theta^Tx_i}} \\&=\frac{e^{-\theta^Tx_i}}{(1+e^{-\theta^Tx_i})^2}\cdot x_{ij}\end{split}\end{equation}\tag 9</script><p>因为式（5），有：</p><script type="math/tex; mode=display">1-g(\theta^Tx_i) = \frac{e^{-\theta^Tx_i}}{1+e^{-\theta^Tx_i}}\tag {10}</script><p>所以</p><script type="math/tex; mode=display">\begin{equation}\begin{split}\frac\delta{\delta\theta_j}g(\theta^Tx_i)&=g(\theta^Tx_i)\cdot(1-g(\theta^Tx_i))\cdot x_{ij}\\&=h_\theta(x_i)\cdot(1-h_\theta(x_i))\cdot x_{ij}\end{split}\end{equation}\tag{11}</script><p>那么：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}\frac{\delta J(\theta)}{\delta \theta_j}&=-\frac1m\sum_{i=1}^m\big(\frac{y_i}{h_\theta(x_i)}-\frac{1-y_i}{1-h_\theta(x_i)}\big)\cdot h_\theta(x_i)\cdot(1-h_\theta(x_i))\cdot x_{ij}\\&=-\frac1m\sum_{i=1}^m[y_i-h_\theta(x_i)]\cdot x_{ij}\\&=\frac1m\sum_{i=1}^m[h_\theta(x_i)-y_i]\cdot x_{ij}\end{split}\end{equation}\tag{12}</script><p>至此，茅塞顿开，浑身舒坦。</p><h3 id="4-结果"><a href="#4-结果" class="headerlink" title="4. 结果"></a>4. 结果</h3><p>接下来只要根据梯度下降一步步迭代获取最终模型即可。</p><p>下图是分类结果：</p><img src="/2020/02/26/logistic-regression/after_reg.png" class=""><p><img src="C:\work\blog\source\_posts\logistic-regression\after_reg.png" alt=""></p><center style="font-size: 16px">图5. 逻辑回归结果</center><h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h3><ol><li>算法实现和画图都是用python做的，这里并没有贴出具体的代码，只谈了对算法的一些认识，因为我觉得代码并不是最重要的，网上一找一大堆，而理解算法本身才是最重要的</li><li>markdown的公式编辑真的好用</li></ol><p><br></p><p><br></p><hr><h3 style="color: red">2020.3.18 补</h3><h3 id="1-多分类问题"><a href="#1-多分类问题" class="headerlink" title="1. 多分类问题"></a>1. 多分类问题</h3><p>逻辑回归本身是一个二分类问题，如果遇到多分类问题该如何解决？</p><p>首先，逻辑回归可以处理多分类问题，假设有A，B，C三类，有四个分类器L1，L2，L3，L1可以识别出样本属于A或者不属于A，L2可以区分属于B或者不属于B，L3类似。</p><p>那么把样本依次经过这三个分类器，就可以得到最终分类。</p><h3 id="2-softmax回归"><a href="#2-softmax回归" class="headerlink" title="2.softmax回归"></a>2.softmax回归</h3><p>上面用多个逻辑回归分类器模拟了多分类的过程，不过多分类问题还可以用一个模型直接解决。</p><p>假设有样本：</p><script type="math/tex; mode=display">X=(x_1, x_2, ..., x_n)\\Y=(y_1, y_2,...,y_n)</script><p>其中n为样本数量，m为特征维度。</p><p>假设分类的最终结果有k种可能，那么有：</p><script type="math/tex; mode=display">\Theta=(\theta_1, \theta_2, ..., \theta_k)</script><p>θ<sub>i</sub>（i为1-k的整数）表示每个类别对应的参数。</p><p>定义y<sub>i</sub>被分为第q类的概率为：</p><script type="math/tex; mode=display">p(c=q|x_i,\theta_k)=\frac{exp(\theta_q^Tx_i)}{\sum_{j=1}^kexp(\theta_j^Tx_i))}\tag {13}</script><p>对于给定的y<sub>i</sub>，令：</p><script type="math/tex; mode=display">y_i^k=\begin {cases}1,\ \ y_i属于第k类\\[2ex]0,\ \ y_i不属于第k类\end {cases}\tag {14}</script><p>假设y<sub>i</sub>独立同分布，有关于θ的似然函数：</p><script type="math/tex; mode=display">L(\theta)=\prod_{i=1}^n (\prod_{j=1}^k p(c=j|x_i,\theta_j)^{y_i^j})\tag {15}</script><p>这样的话，后面一个连乘对于每个x<sub>i</sub>只有一项不为1，所以式（15）也可以直接写成：</p><script type="math/tex; mode=display">L(\theta)=\prod_{i=1}^np(c=q|x_i,\theta_q)\tag {16}</script><p>因为对于每个y<sub>i</sub>，其分类已经确定，假设属于第q类，只需要求给定x<sub>i</sub>后属于第q类的概率即可。</p><p>式（16）、式（15）表示从总体样本中取出样本X的概率，<strong>这个概率越大，表示从总体样本中抽到这一组数据的概率越大，说明估计的样本分布越接近原始分布</strong>，所以需要求L(θ)的最大值。</p><p>具体求解过程略…</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>线性回归与梯度下降</title>
+      <link href="/2020/02/14/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/"/>
+      <url>/2020/02/14/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
+      
+        <content type="html"><![CDATA[<p>之前由于工作需要重新拾起了机器学习相关的知识，想着一不做二不休，干脆把整个脉络再重新梳理一遍，今天写一点关于梯度下降的理解。</p><p>就以线性回归为例来谈谈吧。</p><a id="more"></a><h3 id="1-线性回归"><a href="#1-线性回归" class="headerlink" title="1. 线性回归"></a>1. 线性回归</h3><h5 id="1-1-建模"><a href="#1-1-建模" class="headerlink" title="1.1 建模"></a>1.1 建模</h5><p>假设有学生身高和体重的数据：</p><div class="table-container"><table><thead><tr><th style="text-align:center">学生编号</th><th>身高</th><th>体重</th></tr></thead><tbody><tr><td style="text-align:center">1</td><td>175cm</td><td>70kg</td></tr><tr><td style="text-align:center">2</td><td>165cm</td><td>50kg</td></tr><tr><td style="text-align:center">3</td><td>185cm</td><td>80kg</td></tr></tbody></table></div><p>建立坐标系画出点的分布如下：</p><img src="/2020/02/14/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/height-weight.png" class=""><p><img src="C:\data science\lesson3_PPT与课件\test\height-weight.png" alt=""></p><p><center style="font-size: 16px">图1. 数据点</center><br>现要预测一个200cm的学生的体重。</p><p>我们能大概推算出一个关系：身高越高，体重越重，我们希望用更精确的方式来表达这种关系，这时不难想到中学时学过的解析几何中的一次函数：</p><script type="math/tex; mode=display">y=kx+b\tag 1</script><p>其中，x表示身高，y表示体重。如果用(1)式表示身高与体重的关系，因为(1)是线性的，所以称这个将模糊的关系精确化的过程叫“线性回归”。</p><p>例如将关系总结成如下的直线：</p><img src="/2020/02/14/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/height-weight-line.png" class=""><p><img src="C:\work\blog\source\_posts\线性回归\height-weight-line.png" alt="height-weight-line"></p><p><center style="font-size: 16px">图2. 回归直线</center></p><h5 id="1-2-损失函数"><a href="#1-2-损失函数" class="headerlink" title="1.2 损失函数"></a>1.2 损失函数</h5><p>现在我们已经得到了一个线性模型，那么如何判断这个模型是不是好呢？</p><p>所谓“好”，就是指和原来的结果接近，最完美的情况下，所有的点都在直线上，当然这并不可能，所以我们要做的事情，就是尽可能地让点接近直线。</p><p>假设现在得到的直线是：</p><script type="math/tex; mode=display">y=f(x)=\theta_1 + \theta_2x\tag 2</script><p>于是我们定义第i个点距离直线的距离表示为：</p><script type="math/tex; mode=display">D_i=(f(x_i) - y_i)^2\tag 3</script><p>其中x<sub>i</sub>，y<sub>i</sub>表示第i个样本的身高值和体重值，D<sub>i</sub>也可以看做第i个点的样本值与预测值之间的差异程度。</p><p>知道了每个点的差异程度，就能知道所有点的差异程度，从而求出平均差异程度：</p><script type="math/tex; mode=display">J(\theta_1,\theta_2) = \frac 1{2m}\sum_{i=1}^m(f(x_i) - y_i)^2\tag 4</script><p>为了方便后续计算，乘上系数1/2。</p><p>现在我们的目的很明确，要找到合适的θ，使得差异程度最小。</p><p>而这里的差异程度函数，也称作<strong>损失函数</strong></p><p>经过观察，不难发现这里的损失函数是一个凸函数（具体定义可自行搜索..），这种函数一定有全局最小值，非常适合当做损失函数使用。所以如何构建一个凸函数作为损失函数，是机器学习中的关键。</p><h3 id="2-梯度下降"><a href="#2-梯度下降" class="headerlink" title="2. 梯度下降"></a>2. 梯度下降</h3><h5 id="2-1-简单的数学方法求最小值"><a href="#2-1-简单的数学方法求最小值" class="headerlink" title="2.1 简单的数学方法求最小值"></a>2.1 简单的数学方法求最小值</h5><p>在这个例子里，损失函数是一个二次函数，开口向上，经过简单的数学计算便可以得到最低点。</p><p>不过这样计算量非常大，而且仅限于在二元的情况下，如果维度增加，则很难使用此方法解决。</p><h5 id="2-2-梯度与偏导"><a href="#2-2-梯度与偏导" class="headerlink" title="2.2 梯度与偏导"></a>2.2 梯度与偏导</h5><p>梯度，即函数上某一点处使函数值变化最快的方向，转换为代数模式就是<strong>导数</strong>，导数&gt;0表示增长最快，导数&lt;0表示减少最快。</p><h5 id="2-3-关于梯度下降算法的一些思考"><a href="#2-3-关于梯度下降算法的一些思考" class="headerlink" title="2.3 关于梯度下降算法的一些思考"></a>2.3 关于梯度下降算法的一些思考</h5><p>我看过许多关于梯度下降的文章，大多数都会举“下山”的例子，大概意思是：</p><ul><li>人在山顶处，想要下山</li><li>沿着负梯度方向，函数值减小最快</li><li>选择负梯度方向迈一小步</li><li>不停重复上面一个步骤，直到到达山底</li></ul><p>“迈出一小步”用公式可以描述为：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}\theta_1 : = \theta_1 - \alpha\frac {dJ(\theta_1, \theta_2)}{d\theta_1} \\\theta_2 : = \theta_2 - \alpha\frac {dJ(\theta_1, \theta_2)}{d\theta_2}\end{split}\end{equation}\tag 5</script><p>其中α称为<strong>学习率</strong>，用来控制这里步长的大小。</p><p>到这里，我产生了一个疑问，如何解释α与偏导相乘的意义呢？如果因为负梯度方向减少最快，所以沿着此方向迈步，那么“下山”的目标就是：</p><ul><li>以最快的速度下山</li></ul><p>而如果在一个非直线的函数上，“沿着负梯度方向迈一步”，那么这一步一定会落到函数外侧，那么这一步又有什么意义呢？体现在上面的式子中，-α与偏导相乘表示在负梯度方向跨出一步，而θ只会在横轴或者纵轴方向改变，前后两项方向不一样，如何进行加法运算呢？</p><p>所以我百思不得其解，什么叫“沿着负梯度方向迈一步”，还有，下山的目标真的是“以最快的速度下山吗？”</p><p>最快的速度，无非是一步直接跨到山底，但是因为α的存在，真的可能吗？</p><p>所以我想，可能我们不是想“以最快的速度下山”，而是“以最有效的方式下山”</p><p>那么怎样才能“最有效”呢？抛开“负梯度方向下函数值减少最快”，去观察凸函数的梯度本身，发现：</p><ol><li>越接近函数底部，梯度绝对值越小，变化越平缓，体现在上式中，一开始梯度模比较大，所以α与偏导相乘的值比较大，跨出的步子比较大；而越来越接近底部时，梯度模变小，此时跨出的步子就越小；非常切合实际，越到后面，步子越是要小，否则容易跨过头</li><li>如果不小心步子太大，容易直接越过底部，跨到另一边山坡上。而此时导数值符号变化，导致了原来的“向前跨”变成了“向后跨”，这样不至于一直沿着错误的方向跨步。</li></ol><p>个人认为，上面的两条原因才是让α与偏导数相乘的原因，而并非因为“负梯度方向下函数值减少最快”。这样的话，α才能真正表示“步长”，而导数，只是从函数中发现的，切合此时情景的参数。</p><h5 id="2-4-梯度下降算法"><a href="#2-4-梯度下降算法" class="headerlink" title="2.4 梯度下降算法"></a>2.4 梯度下降算法</h5><p>经过不断迭代θ值后，使得损失函数越来越小，小到某一范围时，停止算法，变完成了梯度下降算法。</p><p>至于何时停止，这篇文章就先不讨论啦..</p><h3 id="3-回归结果"><a href="#3-回归结果" class="headerlink" title="3. 回归结果"></a>3. 回归结果</h3><img src="/2020/02/14/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/linar_regression.png" class=""><p><img src="C:\work\blog\source\_posts\线性回归\linar_regression.png" alt=""></p><p><center style="font-size: 16px">图3. 回归结果</center></p><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ol><li>写出了自己对于梯度下降法的一些理解</li><li>忽略了一些细节，后续考虑写一些细节方面的东西</li></ol><p><br></p><p><br></p><hr><p><h3 style="color: red">2020.3.16 补</h3></p><h4 id="之前直接使用了最小二乘法，而没有深究为何使用它，这里便从极大似然估计角度来谈谈这里使用最小二乘的意义。"><a href="#之前直接使用了最小二乘法，而没有深究为何使用它，这里便从极大似然估计角度来谈谈这里使用最小二乘的意义。" class="headerlink" title="之前直接使用了最小二乘法，而没有深究为何使用它，这里便从极大似然估计角度来谈谈这里使用最小二乘的意义。"></a>之前直接使用了最小二乘法，而没有深究为何使用它，这里便从极大似然估计角度来谈谈这里使用最小二乘的意义。</h4><h4 id="1-构建正态分布"><a href="#1-构建正态分布" class="headerlink" title="1. 构建正态分布"></a>1. 构建正态分布</h4><p>见下式：</p><script type="math/tex; mode=display">y_i = \theta^Tx_i + \xi_i\tag 6</script><p>其中θ<sup>T</sup>x<sub>i</sub>为预测值，y<sub>i</sub>为样本观测值，ξ<sub>i</sub>为误差。</p><p>假设样本是独立同分布的，根据中心极限定理，当样本总体数量足够大时，ξ服从正态分布（μ，δ<sup>2</sup>），总可以调整θ，将常数项对应的θ<sub>0</sub>减去μ，使得ξ服从（0，δ<sup>2</sup>）的正态分布。</p><h4 id="2-似然函数"><a href="#2-似然函数" class="headerlink" title="2. 似然函数"></a>2. 似然函数</h4><p>此时ξ<sub>i</sub>的概率密度函数为：</p><script type="math/tex; mode=display">P(\xi_i)=\frac 1{\sqrt{2\pi}\sigma}exp\left(-\frac {(\xi_i)^2}{2\sigma^2}\right)\tag 7</script><p>将式（6）带入式（7），得：</p><script type="math/tex; mode=display">P(y_i|x_i;\theta) = \frac 1{\sqrt{2\pi}\sigma}exp\left(-\frac {(y_i-\theta^Tx_i)^2}{2\sigma^2}\right)\tag 8</script><p>因为样本独立同分布，于是有：</p><script type="math/tex; mode=display">\begin{split}L(\theta) &= \prod_{i=1}^mP(y_i|x_i;\theta) \\&= \prod_{i=1}^m\frac 1{\sqrt{2\pi}\sigma}exp\left(-\frac {(y_i-\theta^Tx_i)^2}{2\sigma^2}\right)\end{split}\tag 9</script><p>L为似然函数，表示这组样本出现的联合概率。而如今的任务是找到一组θ，使得联合概率最大，这就是所谓的<strong>极大似然估计</strong>。</p><h4 id="3-最小二乘"><a href="#3-最小二乘" class="headerlink" title="3. 最小二乘"></a>3. 最小二乘</h4><p>根据式（9），有：</p><script type="math/tex; mode=display">\begin{split}lnL(\theta) &= \sum_{i=1}^mln\frac 1{\sqrt{2\pi}\sigma}exp\left(-\frac {(y_i-\theta^Tx_i)^2}{2\sigma^2}\right)\\&=\sum_{i=1}^m\left(ln \frac1{\sqrt{2\pi}\sigma} -\frac {(y_i-\theta^Tx_i)^2}{2\sigma^2}\right)\\&=mln \frac1{\sqrt{2\pi}\sigma}-\frac1{2\sigma^2}\sum_{i=1}^m(y_i-\theta^Tx_i)^2\end{split}\tag {10}</script><p>令：</p><script type="math/tex; mode=display">J(\theta) = \frac 12\sum_{i=1}^m\big(h_\theta(x_i)-y_i\big)\tag {11}</script><p>上式便是目标函数，不难得到：</p><ul><li>当J(θ)最小时，似然函数取得最大值</li></ul><p>所以最小化J(θ)就成了最终的目标</p><hr><p><h3 style="color: red">2020.3.17 补</h3><br>所谓线性回归，指的是对于参数而言是线性的，而非对样本而言。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>对于PCA算法的个人理解</title>
+      <link href="/2020/02/11/PCA/"/>
+      <url>/2020/02/11/PCA/</url>
+      
+        <content type="html"><![CDATA[<p>由于项目需要，复习了一下读书的时候学过的PCA降维算法，由于太久没用的缘故，忘记了不少。所谓温故而知新，遂以此文章为引，阐述自己对此算法的理解，记录下新的感悟。</p><a id="more"></a><h3 id="1-降维的意义"><a href="#1-降维的意义" class="headerlink" title="1. 降维的意义"></a>1. 降维的意义</h3><h5 id="1-1-遇到问题"><a href="#1-1-遇到问题" class="headerlink" title="1.1 遇到问题"></a>1.1 遇到问题</h5><p>考虑如下一组数据：</p><div class="table-container"><table><thead><tr><th>学生编号</th><th>性别</th><th>头发长度</th><th>身高</th><th>腿长</th><th>体重</th><th>衣服尺码</th></tr></thead><tbody><tr><td>1</td><td>男</td><td>4cm</td><td>175cm</td><td>90cm</td><td>70kg</td><td>xl</td></tr><tr><td>2</td><td>女</td><td>40cm</td><td>165cm</td><td>80cm</td><td>50kg</td><td>m</td></tr><tr><td>3</td><td>男</td><td>3cm</td><td>185cm</td><td>95cm</td><td>80kg</td><td>xxl</td></tr></tbody></table></div><p>数据一共6个维度，性别、头发长度、身高、腿长、体重、衣服尺码。</p><p>经过观察不难看出：</p><ol><li>头发的长度和性别息息相关，女生的头发大多比男性的头发长</li><li>腿长和身高有关，一般来说，身高越高，腿越长</li><li>衣服尺码随身高、体重增加而增大</li></ol><p>由于数据各个维度高度相关，导致了有些信息是几乎无用的，比如说衣服尺码，通过身高和体重就能推测出衣服尺码，所以衣服尺码这一信息可有可无；同样的，腿长可以根据身高推测出，这一信息也可以省略。</p><h5 id="1-2-数据降维"><a href="#1-2-数据降维" class="headerlink" title="1.2 数据降维"></a>1.2 数据降维</h5><p>去除数据中的无效维度，只留下主要的维度，或者说主成分。这个过程过程，就可以称之为数据降维。换句话说，我们希望数据各个维度之间是没有关系的，相互独立的。</p><p>数据降维的目的就是使数据更加简洁明了。</p><h3 id="2-数学基础"><a href="#2-数学基础" class="headerlink" title="2. 数学基础"></a>2. 数学基础</h3><p>略</p><h3 id="3-建模"><a href="#3-建模" class="headerlink" title="3. 建模"></a>3. 建模</h3><h5 id="3-1-确定优化目标"><a href="#3-1-确定优化目标" class="headerlink" title="3.1 确定优化目标"></a>3.1 确定优化目标</h5><p>上面提到，数据降维相当于把一个高维度的向量，映射到一个低维度向量空间中。</p><p>假设有二维空间中有5个点：</p><ul><li>（1，1）</li><li>（1，3）</li><li>（2，3）</li><li>（4，4）</li><li>（2，4）</li></ul><p>表示为矩阵形式：</p><script type="math/tex; mode=display">\begin{bmatrix}1 & 1 & 2 & 4 & 2 \\1 & 3 & 3 & 4 & 4 \\\end{bmatrix}\tag{1}</script><p>为了后续表示和计算方便，进行中心化处理，将数据每个维度的的值减去该维度的均值，处理后得到以下结果：</p><script type="math/tex; mode=display">\begin{bmatrix}-1 & -1 & 0 & 2 & 0 \\-2 & 0 & 0 & 1 & 1 \\\end{bmatrix}\tag{2}</script><p>5个点在二维向量空间中表示如下：</p><img src="/2020/02/11/PCA/point.png" class=""><p><img src="C:\work\blog\source\_posts\PCA\point.png" alt=""></p><center style="font-size: 16px">图1. 向量空间中的点</center><p>现在目的是将这些数据映射到一维空间中去，即将图中的这些点映射到一条直线上。</p><p>那么问题来了，如何映射才能保证信息最大程度地保留呢？</p><p>假设映射到横轴上，那么横坐标为-1的两个点会合二为一，直接导致了一个点的信息丢失，横坐标为0的点也是如此。</p><p>同样的，假设映射到纵轴上，那么也有两个点的信息会丢失。</p><p>既然映射之后点的距离太近会导致丢失，那么让他们的距离越远越好。或者说，让他们越分散越好。</p><h5 id="3-2-方差"><a href="#3-2-方差" class="headerlink" title="3.2 方差"></a>3.2 方差</h5><p>在数学中，方差被用来描述数据的离散程度，方差越大，离散程度越高。</p><p>所以上面的目标可以转化成，<strong>让映射之后的点的方差尽可能地大</strong>。</p><p>方差的计算公式为：</p><script type="math/tex; mode=display">Var(a)=\frac 1{m-1} \sum_{r=1}^m{(a_i - \mu)}^2\tag{3}</script><p>其中a表示数据集，m表示数据个数，a<sub>i</sub>表示其中某一个数据，μ表示平均值。</p><p>由于之前进行过中心化处理，所以可以简化为：</p><script type="math/tex; mode=display">Var(a)=\frac 1{m-1} \sum_{r=1}^m{a_i}^2\tag{4}</script><p>对于二维向一维映射问题来说，只要找到一个方向，或者找到一条直线，使得映射之后的数据方差最大，那么就得到了最好的映射关系。</p><h5 id="3-3-协方差"><a href="#3-3-协方差" class="headerlink" title="3.3 协方差"></a>3.3 协方差</h5><p>刚才是二维向一维投影，映射之后得到的是一维数据，方差计算较为方便，如果维数更高该怎么办？</p><p>回到一开始的学生信息问题上，我们总是希望数据的各个维度之间没有关系，那么如何衡量数据维度之间的关系呢？</p><p>答案是协方差。假设有数据集X：</p><script type="math/tex; mode=display">X=\begin{bmatrix}a_1 & a_2 & ... & a_m \\b_1 & b_2 & ... & b_m \\\end{bmatrix}\tag{5}</script><p>那么维度a，b的协方差为：</p><script type="math/tex; mode=display">Cov(a,b)=\frac 1{m-1} \sum_{r=1}^m{(a_i - \mu_a)}{(b_i - \mu_b)}\tag{6}</script><p>由于进行过中心化，所以有：</p><script type="math/tex; mode=display">Cov(a,b)=\frac 1{m-1} \sum_{r=1}^m{a_i}{b_i}\tag{7}</script><ul><li>协方差 &gt; 0，表示呈正相关关系</li><li>协方差 &lt; 0，表示呈负相关关系</li><li>协方差 = 0，表示不相关</li></ul><h5 id="3-4-协方差矩阵"><a href="#3-4-协方差矩阵" class="headerlink" title="3.4 协方差矩阵"></a>3.4 协方差矩阵</h5><p>将协方差写成矩阵形式：</p><script type="math/tex; mode=display">\begin{bmatrix}\frac 1{m-1} \sum_{r=1}^m{a_i}^2 & \frac 1{m-1} \sum_{r=1}^m{a_ib_i} \\\frac 1{m-1} \sum_{r=1}^m{a_ib_i} & \frac 1{m-1} \sum_{r=1}^m{b_i}^2 \\\end{bmatrix}=\frac 1{m-1}XX^T=C\tag{8}</script><p>这里的C就表示X的协方差矩阵，对角线上的元素表示维度的方差，其余元素表示两个维度之间的协方差。</p><p><strong>我们希望C经过某种变换之后，只有主对角线上的元素不为0，其他元素都为0，这样的话表示两个维度的数据不相关，能够表示最多的信息量，而这个变化就是要寻找的映射关系。</strong></p><p>也就是说，通过变换P，使得C成为一个对角矩阵。</p><p>现在假设数据集X的协方差矩阵为C，Y是映射后的数据，P是映射变换矩阵，D是Y的协方差矩阵，那么有：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}Y&=PX \\D&=\frac 1{m-1}YY^T \\&=\frac 1{m-1}(PX)(PX)^T \\&=\frac 1{m-1}PXX^TP^T \\&=P(\frac 1{m-1}XX^T)P^T \\&=PCP^T\end{split}\end{equation}\tag{9}</script><p>所以，此时的目标是：</p><ul><li>找到矩阵P，使得D成为对角矩阵</li></ul><h5 id="3-6-对角化协方差矩阵"><a href="#3-6-对角化协方差矩阵" class="headerlink" title="3.6 对角化协方差矩阵"></a>3.6 对角化协方差矩阵</h5><p>伟大的数学先驱们已经为我们总结了许多实对称矩阵的性质，其中有一条：</p><ul><li>n阶实对称矩阵<strong>A</strong>必可相似对角化，且相似对角阵上的元素即为矩阵本身特征值。</li></ul><p>所以我们一定能找到一个矩阵P，使得式（9）成立</p><h5 id="3-7-PCA变换"><a href="#3-7-PCA变换" class="headerlink" title="3.7 PCA变换"></a>3.7 PCA变换</h5><p>现在，我们得到了映射变换矩阵P，和对角矩阵D（对角线元素自上而下递减），接下来需要选择需要映射到的空间的维度。</p><p>假设要映射到K维空间，那么就取P的前k行，此时映射后的数据集Y为：</p><script type="math/tex; mode=display">Y_{k×n}=P_{k×m}X_{m×n}</script><p>至此，完成了PCA算法的所有步骤，成功将数据降维。</p><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ol><li>文章并未涉及如何选择维度的问题，下次讨论…</li></ol><p><br></p><p><br></p><hr><h3 style="color: red">2020.3.31 补</h3><p>之前从数据维度两两不相关角度阐述了对PCA的理解，今天尝试从另外一个角度来解释它。</p><h3 id="1-方差作为目标函数"><a href="#1-方差作为目标函数" class="headerlink" title="1. 方差作为目标函数"></a>1. 方差作为目标函数</h3><p>延续之前的3.2，方差越大，说明数据越离散，那么映射效果越好，那么不妨将投影之后的方差作为目标函数。</p><p>假设映射关系为P，原数据为x，E为单位矩阵，那么方差为：</p><script type="math/tex; mode=display">Var(X) = (XP - E)^T \cdot (XP - E)\tag {10}</script><p>不妨假设已经做过中心化处理，即E=0，再限定u的尺度为1，防止其有无数种取值可能，有：</p><script type="math/tex; mode=display">\begin {split}&Var(X) =P^TX^TXP \\&s.t. \ \ \ \ P^TP=1\end {split}\tag {11}</script><p>此时式（11）变成一个带限制条件的求极值问题。</p><p>根据拉格朗日定理不难得到，在：</p><script type="math/tex; mode=display">X^TXP=\lambda P\tag {12}</script><p>时，目标函数取得极值。入表示拉格朗日参数。</p><p>显然X<sup>T</sup>X为对称矩阵，那么式（12）就可以理解为求方阵X<sup>T</sup>X的特征值和特征向量，n阶对称矩阵有n个不同的特征值入<sub>i</sub>，将X<sup>T</sup>X和对应的特征向量P<sub>i</sub>相乘，得到数据在P<sub>i</sub>维度的投影，若此时结束，那么就获得了一个一维投影；而如果想要更多维度的数据，那么就要找到更多的P<sub>i</sub>，将数据投射到更多的维度。因为对称矩阵的特征向量是两两正交的，所以每个维度之间是不相关的，能够保证反映最大的信息量。</p><p>所以，将求得的特征值从大到小排列，选取前k个最大的，就完成了将数据维度降低到k维的效果。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>react组件中的key属性</title>
+      <link href="/2020/01/06/react-key/"/>
+      <url>/2020/01/06/react-key/</url>
+      
+        <content type="html"><![CDATA[<p>一直以来，我对react（vue）组件中的key属性并不在意，加上它的原因只不过是不想看到讨厌的warning。</p><p>直到昨天，我才发现key的意义所在，以及为什么不推荐用index作为key的值。</p><h3 id="1-遇难题"><a href="#1-遇难题" class="headerlink" title="1. 遇难题"></a>1. 遇难题</h3><p>简单介绍一下背景：</p><ol><li>一组组件，可以添加或者删除</li><li>组件信息从数据库中获取，按时间倒序排列</li><li>每个组件中需要和数据库交互，获取额外信息</li></ol><p>当时用的key值就是数组中的index，导致组件在增加删除后刷新时出现了问题，过程如下：</p><ol><li>原有三个组件，id为：a、b、c，组件中通过数据库获取的数据分别为x、y、z</li><li>添加数据d，此时数据库中没有关于d的数据，d组件获取不到数据</li><li>重新渲染后，有a、b、c、d四个组件，对应的数据为x、y、z、z</li></ol><p>那么问题来了，d应该什么数据也没有，为什么会有数据z呢？</p><h3 id="2-排查"><a href="#2-排查" class="headerlink" title="2. 排查"></a>2. 排查</h3><p>第一时间想到追踪每个组件的数据读取操作，当时数据读取操作写在componentDidMount中，于是在componentDidMount中打印当前组件的id，结果如下：</p><ul><li>增加d之前，打印出a、b、c</li><li>增加d之后，打印出c</li></ul><p>增加d之后，只打印了一次，且打印出了c，说明只有一个c控件被重新渲染。那么为什么只有c被重新渲染？</p><p>结合渲染组件时使用的map操作，突然发现了key这个属性可能是关键所在。</p><h3 id="3-解惑"><a href="#3-解惑" class="headerlink" title="3. 解惑"></a>3. 解惑</h3><p>找到了方向，立刻着手分析。</p><ol><li>当时的key属性的值是index。增加d之前，a、b、c分别对应0、1、2</li><li>增加d之后，由于读取时按时间倒序排列，所以a、b、c、d分别对应1、2、3、0，组件实际的顺序为：d、a、b、c</li></ol><p>这么一来，问题就差不多解决了，增加d之后，d、a、b都没有重新渲染，只有c重新渲染了，因为前三个组件的key值和原来一样，所以并没有重新渲染，第四个组件c由于key值为3，原来不存在这样一个key，所以c重新渲染了，并获取了数据z</p><p>由于第三个组件没有重新渲染，所以保留着上一次渲染的内容，即z，所以出现了数据z并不是因为数据读取错误，而是因为第三个组件压根没有重新渲染。</p><p>问题迎刃而解。</p><h3 id="4-修复"><a href="#4-修复" class="headerlink" title="4. 修复"></a>4. 修复</h3><p>鉴于这个问题，把key属性的值改为了数据库记录的唯一标识，问题解决。</p><h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h3><ol><li>这种遇到问题，解决问题，加深对原理的认识的方式很不错，能让人印象深刻</li><li>基础还不是很牢，前路漫漫</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> react </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>坑坑洼洼的react native之二：node版本</title>
+      <link href="/2019/12/24/node-version/"/>
+      <url>/2019/12/24/node-version/</url>
+      
+        <content type="html"><![CDATA[<p>今天帮同事搭react native的环境，遇到了之前没有遇到的坑。</p><h3 id="1-java"><a href="#1-java" class="headerlink" title="1.  java"></a>1.  java</h3><p>java是先决条件，这点很容易被忽略，因为官方文档中关于java的部分被一笔带过。</p><h3 id="2-node版本"><a href="#2-node版本" class="headerlink" title="2.  node版本"></a>2.  node版本</h3><p>如果node版本不对的话，最后运行项目时node窗口会闪退，导致最后报错，报错信息也很迷，所以这点也需要注意</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> react native </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>定时器的运用</title>
+      <link href="/2019/12/11/timer/"/>
+      <url>/2019/12/11/timer/</url>
+      
+        <content type="html"><![CDATA[<p>前一阵子完成了一个有关定时器的任务：在RN中根据时序画图。下面就说说这个还算是有些波折的过程。</p><h3 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h3><p>需求整理如下：</p><ol><li>有若干个点存放在sqlite中，点的信息有xy坐标、ts时间戳（ts递增）等</li><li>取出这些点，按照时间顺序画出来</li></ol><h3 id="2-第一次尝试"><a href="#2-第一次尝试" class="headerlink" title="2. 第一次尝试"></a>2. 第一次尝试</h3><p>刚接到任务的时候第一反应是：</p><ol><li>取出所有的点</li><li>对于每个点，创建一个setTimeout</li><li>取第一个点的ts作为基准时间点</li><li>setTimeout的延时长度为对应点ts与基准时间的差值</li></ol><p>这样一来，每个点都能在规定的时间被画出来了，看起来没有啥问题，而且实现非常简单。</p><p>不过事实并非如此，遇到了如下的问题：</p><ol><li>假设有1W个点，那么同时会有几千个定时器存在，占用超多内存，卡爆</li><li>由于ts是递增的，到后面定时器的延时时间会非常长，导致报出警告</li></ol><p>其实第一个问题就足以让我换一种方法了。</p><h3 id="3-前进一小步"><a href="#3-前进一小步" class="headerlink" title="3. 前进一小步"></a>3. 前进一小步</h3><p>既然定时器太多，那么如何减少定时器的数量呢？不难想到用setInterval代替setTimeout，不过问题是，前者只能使用固定的时间间隔，而实际ts间隔是不同的，那么如何解决这个问题？想到了如下折中的办法：</p><ol><li>设定间隔时间阈值t(t &gt; 0)，任意两个ts之差的绝对值小于t的点归为一类</li><li>同一类的点视作间隔相等，间隔时间为t</li><li>每一类对应一个setInterval</li><li>第一个setinterval结束后，另一个setinterval开始</li></ol><p>这样有两个问题：</p><pre><code>1. t过大，大部分点都属于同一类，时间间隔相同，无法复现原有情景 2. t过小，种类过多，导致定时器依然很多</code></pre><p>经过多次改变t，找到了比较好的中间值，不过结果仍然差强人意，而且实现较为困难。</p><h3 id="4-停下思考"><a href="#4-停下思考" class="headerlink" title="4. 停下思考"></a>4. 停下思考</h3><p>对于有些强迫症的我来说，上面的结果是没有办法接受的，思考了一阵，觉得有两条路：</p><ol><li>回归setTimeout，使用两个相邻点的ts之差作为延时量，代替原来的与基础ts的差，且前一个setTimeout完成后才进行下一个setTimeout</li><li>想别的办法。</li></ol><p>考虑到第一条路实现非常繁琐，需要各种flag判断，再加上经过上面的过程之后，想要找一个精简一点的方法，遂考虑<strong>一切推翻重来</strong>。</p><h3 id="5-转折"><a href="#5-转折" class="headerlink" title="5. 转折"></a>5. 转折</h3><p>正在我思考该如何重来的时候，正在睡午觉的同事的闹钟响了，同事缓缓抬起了头，睁开惺忪的睡眼，站起来去洗手间…等等！闹钟，闹钟，闹钟…!对了，闹钟！</p><p><strong>我可以只创建一个定时器，定时器一直向前走，到了某个时间点唤醒对应的点</strong>。</p><p>之前我所有的想法都是将点和计时器紧密结合起来，每个点或者几个点对应一个计时器。没有考虑过奖定时器和点分离开来。</p><h3 id="6-大跃进"><a href="#6-大跃进" class="headerlink" title="6. 大跃进"></a>6. 大跃进</h3><p>改进后方法如下：</p><ol><li>创建一个setinterval，步距设为s</li><li>取第一个点的ts为基准ts，取名baseTS</li><li>从第一个点开始判断，判断点的ts与baseTS的差值的绝对值是否小于s</li><li>如果小于s，那么就画出这个点</li><li>否则，将baseTS + s</li><li>重复3-5，直到将所有点都画出</li></ol><p>这样可以保证每个点都能被画出来，而且步距s的可取范围变得更大。</p><p>最终达到了一个令人满意的结果，而且代码量也很少</p><h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h3><p>优化无止境，精益求精。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> react native </tag>
+            
+            <tag> javaScript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>一些优化</title>
+      <link href="/2019/12/05/optimization/"/>
+      <url>/2019/12/05/optimization/</url>
+      
+        <content type="html"><![CDATA[<ul><li>sql优化</li><li>数据准备优化、RN和android之间通信速度优化</li></ul><p>今天review了一下代码，发现以及改正了一些效率低下的地方。</p><h3 id="1-RN和android的数据通信"><a href="#1-RN和android的数据通信" class="headerlink" title="1. RN和android的数据通信"></a>1. RN和android的数据通信</h3><p>因为需求需要，之前写了一个RN和android通信的模块，实现了从android端向RN端传送N条数据，具体实现官网上都有教程，且我并没有遇到什么问题，所以不在此赘述。</p><p>当时的实现思路是：</p><ol><li>每次传送一条数据</li><li>传送N次</li></ol><p>传送了1W条数据，每条数据是长度约20的字符串，一共耗时36s，可能由于缺乏对这方面速度概念的理解，当时并没有觉得有什么大问题，直到向BOSS汇报的时候…</p><p>于是着手改进。</p><p>整理了一下思路，速度主要分为两个部分：</p><ol><li>传输操作消耗的基础时间</li><li>由于携带数据消耗的额外时间</li></ol><p>每次传输的数据量越大，消耗的时间就越长，但是传输次数就减少；而减少每次的传输量，能够加速单次传送，不过传送次数又增加。</p><p>想要找到最优解的话，就需要知道每次消耗的时间与数据大小的具体关系。</p><p>设计了简单的测试，步骤如下：</p><ol><li>一次传送所有数据</li></ol><p>结果传送1W条数据只用了1s，可以得到基础结论：单次传输时间成本很高，需要尽量减少传送次数。</p><p>为了提高效率，这次就采用了这个较优解，至于最优解，在闲余时间会深入研究。</p><h3 id="2-RN和sqlite通信"><a href="#2-RN和sqlite通信" class="headerlink" title="2. RN和sqlite通信"></a>2. RN和sqlite通信</h3><p>和上面的例子非常相似，只不过这次是关于数据库的操作。</p><p>背景是从sqlite中读取1W条数据，之前的步骤是：</p><ol><li>读1条数据</li><li>读1W次</li></ol><p>耗时20s，更改之后的步骤：</p><ol><li>一次读所有数据</li></ol><p>耗时1s。</p><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><ol><li>RN和android之间的通信是跨语言的，成本比较高，需要减少通信次数</li><li>数据库的读写操作成本也很高，需要减少与数据库的交互次数</li><li>数据量本身造成的时间成本相较于上面两点，并不高</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+          <category> 代码review </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> react-native </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>折腾hexo之三：配置与命令</title>
+      <link href="/2019/12/04/hexo-config/"/>
+      <url>/2019/12/04/hexo-config/</url>
+      
+        <content type="html"><![CDATA[<p>这次研究了一下hexo的各种命令和_config.yml配置文件。</p><h3 id="1-命令"><a href="#1-命令" class="headerlink" title="1. 命令"></a>1. 命令</h3><p>仅对于常用的命令谈谈自己的理解。</p><ol><li><p>初始化命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init</span></pre></td></tr></table></figure><p>此命令用户在当前目录下生成一个hexo项目</p></li><li><p>生成部署文件命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo g</span></pre></td></tr></table></figure><p>此命令用于在目录下生成public文件夹，而public文件夹中的内容就是之后要部署到服务器上的内容</p></li><li><p>清除命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo clean</span></pre></td></tr></table></figure><p>此命令用于将public文件夹删除，一般在hexo g命令之前使用此命令，防止文件冗余（直接hexo g的话，可能有一些不需要的之前生成的文件残留下来）</p></li><li><p>开启本地服务命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo s</span></pre></td></tr></table></figure></li><li><p>部署命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo d</span></pre></td></tr></table></figure><p>此命令用于将public文件夹部署到指定服务器上</p></li></ol><h3 id="2-根目录下的-config-yml配置文件"><a href="#2-根目录下的-config-yml配置文件" class="headerlink" title="2. 根目录下的_config.yml配置文件"></a>2. 根目录下的_config.yml配置文件</h3>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>坑坑洼洼的react native之一：和sqlite不得不说的故事</title>
+      <link href="/2019/12/04/sqlite-issues/"/>
+      <url>/2019/12/04/sqlite-issues/</url>
+      
+        <content type="html"><![CDATA[<ol><li>配置问题</li><li>多次加载问题</li><li>画板优化</li></ol><p>因为业务需要，最近开始接触react native，不学不知道，一学才发现，这一定是一条坑洼大道。因为第一步配置就折腾地我死去活来，下面就用文字来发泄我的郁闷之情。</p><h3 id="1-react-native配置"><a href="#1-react-native配置" class="headerlink" title="1. react native配置"></a>1. react native配置</h3><p>由于用的windows本，所以是按照win+android来配置的，简单说下流程。</p><ol><li><p>nodejs，java环境配置，react-native-cli脚手架安装，不多赘述只需要注意node和npm的权限问题即可</p></li><li><p>Android环境配置，这里需要认真看官网给出的教程，不然很容易漏装一些乱七八糟的东西，其次注意环境变量的名称和目录即可</p></li><li><p>创建模拟器，选对安卓版本即可</p></li><li><p>创建新项目，一行命令搞定。</p></li><li><p>编译运行项目，一行命令搞定，这里有些点需要注意</p><ul><li><p>要在项目根目录下（有ios和android文件夹）执行命令，不能进入某一个文件夹下</p></li><li><p>有时编译会不通过，并报“Failed to install the app. Make sure you have the Android development environment set up”的错误，具体原因我不知道，解决方案如下：</p><ul><li>把node_modules文件夹删掉，重新npm install，再执行编译命令 </li><li>干掉整个项目，新建一个</li></ul></li></ul></li></ol><p>这样一来，react native的基本环境就搭建好了，到这里为止还是比较简单的。</p><h3 id="2-react-native-下的sqlite插件"><a href="#2-react-native-下的sqlite插件" class="headerlink" title="2. react native 下的sqlite插件"></a>2. react native 下的sqlite插件</h3><p>sqlite对于原生有很好的支持，而RN封装了这些方法，将接口提供给js使用，为了（lao）提升（ban）代码（yao）的复（qiu）用性（de），我毅然决定在RN中写好对数据库的操作，在ios和android两端只要进行配置即可。</p><p>谁知道，前路如此坎坷，诸君请听我细细道来。</p><h5 id="2-1-配置"><a href="#2-1-配置" class="headerlink" title="2.1 配置"></a>2.1 配置</h5><p>仅以android端为例，过程参照</p><blockquote><p><a href="https://github.com/andpor/react-native-sqlite-storage" target="_blank" rel="noopener">https://github.com/andpor/react-native-sqlite-storage</a></p></blockquote><p>整理如下：</p><ol><li><p>npm安装插件，这一步没有什么问题</p></li><li><p>更改android配置文件settings.gradle。<strong>这是卡我卡的最久的一步</strong>，按照说明更改配置后，android studio中同步时一直报错，如下：</p><img src="/2019/12/04/sqlite-issues/error2.png" class="" title="error"><p>墙里墙外访问过无数网站，试验过千百种方法……最终发现了问题所在。<strong>New File(…)中的路径错了，少了一个/platforms（可是原来错误的路径下也有android文件夹啊！！我特地检查过的！！），下面是正确路径：</strong>：</p><img src="/2019/12/04/sqlite-issues/path_correct.png" class="" title="error"><p>所以问题来了，为啥github和npm上的教程步骤都不对？？？为什么？why？なぜ？</p><p>没人能够回答我…</p></li><li><p>配置build.gradle文件，这里没有问题</p></li><li><p>将插件添加到package中，以供js使用。<strong>大坑2号出现了！卡我第二久</strong>，按照配置配置完之后，美滋滋的开始编译，以为终于雨过天晴，可是迎来的只有冷冷的冰雨，还在脸上胡乱地拍。又报错了….啊啊啊啊！！错误如下：</p><img src="/2019/12/04/sqlite-issues/error3.png" class="" title="error"><p>大致意思是MainApplication模块被创建了两次…于是查看了一下日志，发现启动时有这么一段话：</p><img src="/2019/12/04/sqlite-issues/error4.png" class="" title="error"><p>大致意思<strong>是RN会自动加载依赖，可是react-native-sqlite-storage这个依赖被手动加载了</strong>，这也和之前的错误对应上了，那么就按照他的解决方案来吧，输入了下面的命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">react-native unlink react-native-sqlite-storage</span></pre></td></tr></table></figure><p>果然还是不行，呵呵，我转过头，外面的天空好蓝，偶尔有几只鸟飞过。</p><p>所以，到底是哪里重复创建了？？？</p><p>上了个厕所冷静了一下，重新捋了一遍，发现第三步中，显式地将<strong>SQLitePluginPackage</strong>加入了packages中，难道这里不需要加进去？管他三七二十一，先试试。</p><p>可！以！了！！！</p><p>瞬间浑身舒爽…</p><p>等等，那文档里写的啥？？？为啥让我多此一举？？难道是文档没有及时更新吗？？</p><p>…………………….</p></li></ol><p>至此，sqlite插件成功配置完成，额不对，完成了一半，因为还有ios端…</p><p>路漫漫，坑洼不断，不过我还是相信总有花明柳暗。</p><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>总结一下今天的配置过程，很痛苦，不过也学到了很多东西，也培养了屡败屡战的不屈精神，总体来说收获颇丰。</p><p><strong>更重要的一点，以后遇到报错一定要截图！！否则后期为了文章里的图还要重现一下bug…</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> react native </tag>
+            
+            <tag> sqlite </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>折腾hexo之二：更换主题</title>
+      <link href="/2019/12/03/beautify/"/>
+      <url>/2019/12/03/beautify/</url>
+      
+        <content type="html"><![CDATA[<p>作为一个颜控，hexo的默认主题并不能满足我，于是我开启了对博客颜值的追求之旅。</p><a id="more"></a><h3 id="1-弱水三千取一瓢"><a href="#1-弱水三千取一瓢" class="headerlink" title="1. 弱水三千取一瓢"></a>1. 弱水三千取一瓢</h3><p>打开官网主题页面，200+主题任君挑选。经过一番挑选，最终选择了meterial-x这款主题，无论色调还是风格都是我喜欢的类型，下面是主题截图：</p><img src="/2019/12/03/beautify/material.png" class="" title="my img"><p><strong><em>(这里不得不提的是，在图片加载过程中遇到了许多问题，会在下一小结详细说明)</em></strong></p><p>还有实例网址：</p><blockquote><p><a href="https://xaoxuu.com/" target="_blank" rel="noopener">https://xaoxuu.com/</a></p></blockquote><p>&lt;/br&gt;</p><h3 id="2-插叙：图片加载问题"><a href="#2-插叙：图片加载问题" class="headerlink" title="2. 插叙：图片加载问题"></a>2. 插叙：图片加载问题</h3><p>这个问题是在写这篇blog时遇到的，困扰了我一阵子，希望我的解决方案可以帮到以后阅读这篇文章的人。</p><h5 id="2-1-原生markdown图片语法问题"><a href="#2-1-原生markdown图片语法问题" class="headerlink" title="2.1 原生markdown图片语法问题"></a>2.1 原生markdown图片语法问题</h5><p>原来的<img src="图片url" alt="">语法能在文档编辑时正常显示，不过部署后无法显示。于是上网搜集解决方案，先进行了以下操作：</p><ol><li>将_config.yml文件中的post_asset_folder配置项设置为true</li><li>安装hexo-asset-image插件</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install hexo-asset-image --save</span></pre></td></tr></table></figure><p>此时使用</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo n post &quot;balabala&quot;</span></pre></td></tr></table></figure><p>新建文档时，会发现不仅创建了文档本身，还创建了和文档同名的文件夹。将图片放入此文件夹中，对应文档中使用相对路径应该就可以完成图片的显示。</p><p><strong>可是并没有。</strong></p><p>无奈之下，寻求别的出路。</p><h5 id="2-2-官网提供的语法也不行？"><a href="#2-2-官网提供的语法也不行？" class="headerlink" title="2.2 官网提供的语法也不行？"></a>2.2 官网提供的语法也不行？</h5><p>去hexo官网，发现有专门针对资源的加载语法：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;% asset_img image.jpg description %&#125; &#x2F;&#x2F; asset_img表示图片资源，image.jpg表示文件夹下图片                                          的名称，description表示图片描述</span></pre></td></tr></table></figure><p>立马试了一下，发现<strong>还是不行</strong></p><p>苦恼之下，打开了chrome开发者工具，试图寻找一丝线索。</p><p>结果发现网页中图片的地址解析成了/.com//2019/12/03/文件夹/图片.jpg，问题就出在这里，为啥解析成了这奇怪的东西？难道官网给出的方法也不靠谱，解析出了问题？</p><h5 id="2-3-hexo-asset-image插件bug"><a href="#2-3-hexo-asset-image插件bug" class="headerlink" title="2.3 hexo-asset-image插件bug"></a>2.3 hexo-asset-image插件bug</h5><p>“只不过是从头再来…”，脑海中想起了刘欢的声音。</p><p>于是我把一切推翻重来，按照官网的步骤重新搭建了环境，这次我发现一个奇怪的事情：<strong>官网上根本没有提到关于hexo-asset-image插件的事情</strong>，而且有这么一段话：</p><blockquote><p>在Hexo 2时代，社区创建了很多插件来解决这个问题。但是，随着Hexo 3 的发布，许多新的标签插件被加入到了核心代码中。这使得你可以更简单地在文章中引用你的资源。</p></blockquote><p>我查看了一下package.json文件，发现hexo的版本是4.0，是3.0之后的版本，所以<strong>我用2.0版本的方法试图解决4.0版本的问题</strong>，所以出了问题。</p><p>所以我这次没有安装hexo-asset-image插件，最后成功在网页上渲染出了图片。</p><p><strong><em>PS: 后来在网上收集资料，确实是hexo-asset-image插件出了问题</em></strong></p><p><strong>最后总结一句话，使用步骤尽量参考官方文档，网上有些博客提供的方法确实不靠谱…</strong></p><p>&lt;/br&gt;</p><h3 id="3-安装主题"><a href="#3-安装主题" class="headerlink" title="3. 安装主题"></a>3. 安装主题</h3><p>安装步骤如下：</p><ol><li><p>下载主题文件，放到项目跟目录下的themes文件夹</p></li><li><p>在_config.yml文件中找到配置项theme，设置为主题文件夹的名称</p></li><li><p>重新生成public文件夹：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo clean</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">npx hexo g</span></pre></td></tr></table></figure><p>这里clean操作可以清除根目录下的public文件夹中的内容，g表示generation，可以生成public文件夹。（<strong>public文件夹中的内容就是部署到服务器上的内容</strong>）</p></li><li><p>启动服务：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo s</span></pre></td></tr></table></figure><p>这时就可以看到主题已经应用上了。</p></li></ol><p>&lt;/br&gt;</p><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><p>今天更换了喜欢的主题，并且解决了图片无法正常显示的问题，下次准备研究一下_config.yml文件中的各个配置项。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 花里胡哨瞎折腾 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>折腾hexo之一：遇见hexo</title>
+      <link href="/2019/12/02/%E9%81%87%E8%A7%81hexo/"/>
+      <url>/2019/12/02/%E9%81%87%E8%A7%81hexo/</url>
+      
+        <content type="html"><![CDATA[<p>一直想搭建一个属于自己的博客，今天终于把这个想法付诸实践，整理一下流程以做纪念，也作为本博客的第一篇文章。</p><a id="more"></a><h3 id="1-选型"><a href="#1-选型" class="headerlink" title="1. 选型"></a>1. 选型</h3><p>通过网上搜集资料，了解到了3种搭建博客的方式：</p><ol><li>hexo + github，基于js</li><li>WordPress，基于php</li><li>hugo，基于go</li></ol><p>考虑到自己对js比较熟悉，再加上能免费把博客挂在github，毫不犹豫选择了hexo。</p><h3 id="2-环境搭建"><a href="#2-环境搭建" class="headerlink" title="2. 环境搭建"></a>2. 环境搭建</h3><p>大方向确定之后，便开始着手环境的搭建，流程整理如下：</p><ol><li>安装nodejs，由于hexo基于node，所以node是必须的。<strong>值得注意的是，window下安装node时可能报2503错误，这是权限导致的问题，解决方法是：使用管理员命令行，将安装文件拖入命令行回车即可。另外，使用npm时如果需要全局安装，那么也需要管理员权限</strong></li></ol><ol><li>安装hexo-cli，这是hexo的脚手架工具，用于创建hexo项目，安装命令如下：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -S</span></pre></td></tr></table></figure><p>这里我采用了局部安装的方法，因为嫌权限切换太麻烦..而且把hexo-cli包存到package.json文件中，方便之后npm install一条命令安装所有包。如果是全局安装，那么需要管理员权限，命令如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span></pre></td></tr></table></figure><ol><li>安装hexo，用于对项目进行各种操作</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install hexo -S</span></pre></td></tr></table></figure><p>同样，我选择了局部安装</p><ol><li>新建文件夹，用作hexo项目的根目录，在目录下创建hexo环境</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo init</span></pre></td></tr></table></figure><p>这里由于我没有加入环境变量，所以加上了npx（具体见官网）</p><ol><li>使用以下命令创建本地服务器，预览博客效果</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo s</span></pre></td></tr></table></figure><p>通过终端中给出的地址访问博客。至此，环境搭建完成。</p><ol><li>创建github仓库，<strong>仓库名称必须为：username.github.io，其中username更换成github的id</strong></li></ol><ol><li>建立hexo和仓库的连接。打开hexo项目目录下的_config.yml，拉到最低，看见如下代码段：</li></ol><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">repo:</span> <span class="string">仓库地址</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">brach:</span> <span class="string">master</span></span></pre></td></tr></table></figure><p>其中有些字段后来加上，type表示部署的方式，这里填上git；repo是repository的缩写，表示仓库，这里填上自己在上一步建立的仓库地址即可；branch默认就是master，这里显式标出，更加清晰</p><ol><li>将项目部署到github。一条命令即可：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npx hexo d</span></pre></td></tr></table></figure><p>期间会提示输入github账号密码，正常输入即可。至此，部署完成，可以访问username.github.io查看博客。</p><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>今天简单的搭建了环境，不过仅仅处于“能运行”的状态，距离博客成型还有一段距离。明天试着熟悉hexo的各种操作。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 正儿八经学技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> hexo </tag>
+            
+        </tags>
       
     </entry>
     

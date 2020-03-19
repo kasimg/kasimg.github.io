@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
   
-  <title>Archives: 2019/12 | Kasim</title>
+  <title>决策树和随机森林 | Kasim</title>
   
   
 
@@ -45,7 +45,7 @@
   
   
   <div class="cover-wrapper">
-    <cover class='cover  half'>
+    <cover class='cover post half'>
       
         
   <h1 class='title'>Kasim</h1>
@@ -247,34 +247,10 @@
   <div class="l_body">
     <div class='body-wrapper'>
       <div class='l_main'>
-	
-		
-  <section class="post-list">
-    
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
   
+
+  <article id="post" class="post white-box article-type-post" itemscope itemprop="blogPost">
+    
 
 
   <section class='meta'>
@@ -283,11 +259,13 @@
     <div class="meta" id="header-meta">
       
         
-  <h2 class="title">
-    <a href="/2019/12/24/node-version/">
-      坑坑洼洼的react native之二：node版本
-    </a>
-  </h2>
+  
+    <h1 class="title">
+      <a href="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/">
+        决策树和随机森林
+      </a>
+    </h1>
+  
 
 
       
@@ -315,105 +293,7 @@
             <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-24</p>
-  </a>
-</div>
-
-          
-        
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
-      
-    </div>
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <div class="readmore">
-          <a href="/2019/12/24/node-version/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/react-native/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> react native</a>
-        
-      </div>
-    
-  </section>
-</article>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
-
-
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/11/timer/">
-      定时器的运用
-    </a>
-  </h2>
-
-
-      
-      <div class='new-meta-box'>
-        
-          
-        
-          
-            
-  <div class='new-meta-item author'>
-    
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
-    
-  </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-11</p>
+    <p>2020-03-03</p>
   </a>
 </div>
 
@@ -434,6 +314,19 @@
         
           
             
+  
+    <div class="new-meta-item browse busuanzi">
+      <a class='notlink'>
+        <i class="fas fa-eye" aria-hidden="true"></i>
+        <p>
+          <span id="busuanzi_value_page_pv">
+            <i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+          </span>
+        </p>
+      </a>
+    </div>
+  
+
 
           
         
@@ -450,577 +343,390 @@
   </section>
 
 
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <div class="readmore">
-          <a href="/2019/12/11/timer/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/react-native/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> react native</a>
-        
-          <a href="/tags/javaScript/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> javaScript</a>
-        
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <p>年龄太大？不见</p>
+<p>长得不好看？不见</p>
+<p>收入太低？不见</p>
+<p>…</p>
+<p>人们在相亲的时候难免会做出以上的决策，当然，爱美之心人皆有之，而且人人都有追求更好物质生活的精神生活的权利。</p>
+<a id="more"></a>
+<h3 id="1-什么是决策树"><a href="#1-什么是决策树" class="headerlink" title="1. 什么是决策树"></a>1. 什么是决策树</h3><p>如果把相亲的决策过程可视化，可以得到下面的图：</p>
+<img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/%E7%9B%B8%E4%BA%B2%E5%86%B3%E7%AD%96%E6%A0%91.png" class="">
+<p><img src="C:\work\blog\source\_posts\决策树\相亲决策树.png" alt=""></p>
+<p><center style="font-size: 16px">图1. 可视化决策过程</center><br>图中黄色部分表示判断依据，依次按照年龄、长相、收入、是否是公务员4个方面进行决策，最终得出“见”或者“不见”的结论。</p>
+<p>此过程长得很像一棵树，所以我们把这种决策方法叫做<strong>决策树</strong>。</p>
+<h3 id="2-使用决策树"><a href="#2-使用决策树" class="headerlink" title="2. 使用决策树"></a>2. 使用决策树</h3><h5 id="2-1-分类问题"><a href="#2-1-分类问题" class="headerlink" title="2.1 分类问题"></a>2.1 分类问题</h5><p>下面看一个比较具体的问题，下表记录了两个星期内的天气、湿度、风级状况，以及小明是否外出打球：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>天气</th>
+<th>湿度</th>
+<th>风级</th>
+<th>是否打球</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>晴</td>
+<td>高</td>
+<td>弱</td>
+<td>否</td>
+</tr>
+<tr>
+<td>2</td>
+<td>晴</td>
+<td>高</td>
+<td>强</td>
+<td>否</td>
+</tr>
+<tr>
+<td>3</td>
+<td>阴</td>
+<td>高</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>4</td>
+<td>雨</td>
+<td>高</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>5</td>
+<td>雨</td>
+<td>正常</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>6</td>
+<td>雨</td>
+<td>正常</td>
+<td>强</td>
+<td>否</td>
+</tr>
+<tr>
+<td>7</td>
+<td>阴</td>
+<td>正常</td>
+<td>强</td>
+<td>是</td>
+</tr>
+<tr>
+<td>8</td>
+<td>晴</td>
+<td>高</td>
+<td>弱</td>
+<td>否</td>
+</tr>
+<tr>
+<td>9</td>
+<td>晴</td>
+<td>正常</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>10</td>
+<td>雨</td>
+<td>正常</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>11</td>
+<td>晴</td>
+<td>正常</td>
+<td>强</td>
+<td>是</td>
+</tr>
+<tr>
+<td>12</td>
+<td>阴</td>
+<td>高</td>
+<td>强</td>
+<td>是</td>
+</tr>
+<tr>
+<td>13</td>
+<td>阴</td>
+<td>正常</td>
+<td>弱</td>
+<td>是</td>
+</tr>
+<tr>
+<td>14</td>
+<td>雨</td>
+<td>高</td>
+<td>强</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>现在要求是给出任意的天气、湿度、风级条件，预测出小明是否会出门打球。</p>
+<h5 id="2-2-信息熵"><a href="#2-2-信息熵" class="headerlink" title="2.2 信息熵"></a>2.2 信息熵</h5><p>我们希望画出一课类似图1中的决策树，那么首先需要找到一个特征作为判断依据，这里的特征有三个：</p>
+<ul>
+<li>天气</li>
+<li>湿度</li>
+<li>风级</li>
+</ul>
+<p>显然，先选天气作为判断依据，和先选湿度作为判断依据，得到的决策树肯定是不同的。那么既然能得到很多颗决策树，那一颗数比较好呢？</p>
+<p>下面先按照天气划分：</p>
+<img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/%E6%8C%89%E7%85%A7%E5%A4%A9%E6%B0%94%E5%88%92%E5%88%86.png" class="">
+<p><img src="C:\work\blog\source\_posts\决策树\按照天气划分.png" alt=""></p>
+<p><center style="font-size: 16px">图2. 按照天气划分</center><br>如何衡量这种划分策略的好坏？</p>
+<p>以所有晴天的数据为例，一共有5个晴天，其中2天小明出去打球，3天没有，那么可以认为在天晴时，小明外出打球的概率为：</p>
+<script type="math/tex; mode=display">
+P(打球|天晴)=\frac2{2+3}=0.4
+\tag 1</script><p>考虑下面这个函数：</p>
+<script type="math/tex; mode=display">
+H(p)=-plnp-(1-p)ln(1-p)
+\tag 2</script><p>其中p为事件A发生的概率，这个函数的图像为：</p>
+<img src="/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/entropy.png" class="">
+<p><img src="C:\work\blog\source\_posts\决策树\entropy.png" alt=""></p>
+<p><center style="font-size: 16px">图3. 信息熵图像</center><br>可以看到，当p为0时，表示事件A不可能发生，此时函数值为0，同样的，当p为1时，表示事件A一定发生，函数值为0。而当p为0.5时，表示事件A发生的概率和不发生的概率相同，函数值达到最大。</p>
+<p>这个函数可以用来度量<strong>事件的不确定性</strong>。当p为0或1时，确定发生或者不发生，确定性最大，所以不确定性最小；反之，p为0.5时不确定性最大。</p>
+<p>回到天气划分上，天晴的情况下，小明出门打球的概率为0.4，不确定性比较高，而我们希望不确定性越低越好，从而得到更加精确的决策结果。</p>
+<p>式（2）中的H(p)叫做<strong>信息熵</strong>，用于度量信息的不确定性。</p>
+<p>这样一来，我们选择某个特征的标准就是：</p>
+<ul>
+<li>特征的熵最小</li>
+</ul>
+<h5 id="2-3-特征的信息熵"><a href="#2-3-特征的信息熵" class="headerlink" title="2.3 特征的信息熵"></a>2.3 特征的信息熵</h5><p>令“小明出门打球”为事件A，天气特征为C，其中：</p>
+<script type="math/tex; mode=display">
+C=\{C_1,C_2,...,C_n\}
+\tag 3</script><p>C<sub>i</sub>为特征的所有可能取值。</p>
+<p>在C<sub>i</sub>情况下的信息熵为：</p>
+<script type="math/tex; mode=display">
+H(A,C_i)=-P(A|C_i)*lnP(A|C_i)-\big(1-P(A|C_i)\big)ln\big(1-P(A|C_i)\big)
+\tag 4</script><p>而这仅仅是特征中一个取值的熵，那么特征C的总信息熵可以定义为：</p>
+<script type="math/tex; mode=display">
+H(A,C)=\sum_{i=1}^nH(A,C_i)\cdot w_i
+\tag 5</script><p>其中ω<sub>i</sub>为特征中各个取值C<sub>i</sub>的权重，假设总样本量为n，有j个样本取值为C<sub>i</sub>，那么：</p>
+<script type="math/tex; mode=display">
+w_i=\frac jn</script><p>这样一来，就可以度量每一个特征的不确定性，选择其中不确定性最小的一个，座位此次划分的标准。</p>
+<p><strong><em>此策略是贪心策略，并不能保证全局最优</em></strong></p>
+<h5 id="2-4-信息增益和信息增益比"><a href="#2-4-信息增益和信息增益比" class="headerlink" title="2.4 信息增益和信息增益比"></a>2.4 信息增益和信息增益比</h5><p>信息增益定义为：</p>
+<script type="math/tex; mode=display">
+Gain(A, C)=H(A)-H(A,C)
+\tag 6</script><p>表示以C作为判别条件，新的信息熵相较于之前的信息熵下降的幅度。显然，信息增益越大，表示不确定性下降的越多，说明特征选取越好。</p>
+<p>现在假设有n个样本，条件C有n中取值，将样本分为n类，每类只有一个样本。那么这种情况下，特征C的熵为0，因为每种取值的熵都为0。这是我们不愿意看到的情况：<strong>过拟合</strong></p>
+<p>如果以信息增益为判断标准，那么这种可能导致过拟合的特征因为其信息增益最大，所以首当其冲。这并不是我们想看到的。</p>
+<p>于是给这些特征一个限制条件，定义<strong>信息增益比</strong>：</p>
+<script type="math/tex; mode=display">
+GainRatio(A, C)=\frac {Gain(A,C)}{H(A, C)}
+\tag 7</script><p>将信息增益比作为新的判断条件，需要给出合适的区间（比值太大和太小都不行），这样能排除掉会过拟合的情况，也能保证信息增益较高。</p>
+<h5 id="2-5-特征连续的决策边界选取"><a href="#2-5-特征连续的决策边界选取" class="headerlink" title="2.5 特征连续的决策边界选取"></a>2.5 特征连续的决策边界选取</h5><p>上面的讨论是建立在特征的取值属于一个集合的情况，那么如果特征取值是一个数值（特征连续）该如何？</p>
+<p>看下图：</p>
+<p><img src="C:\work\blog\source\_posts\决策树\决策边界选取.png" alt="决策边界选取"></p>
+<p><center style="font-size: 16px">图4. 决策边界选取</center><br>有4个样本点，点关于特征C的取值为x<sub>1</sub>到x<sub>4</sub>，样本点两两之间的距离为d<sub>1</sub>，d<sub>2</sub>，d<sub>3</sub>。</p>
+<p>两个相邻的样本点之间不存在样本点，所以相邻间隔区域的中点b<sub>1</sub>，b<sub>2</sub>，b<sub>3</sub>可以作为候选决策边界。在b<sub>1</sub>，b<sub>2</sub>，b<sub>3</sub>中选择不确定性最小的边界作为最终的决策边界。</p>
+<p>这样有一个问题，如果样本数量非常多，那么候选决策边界也会非常多，要是计算每个候选决策边界的熵值，计算成本太高。所以通常的做法是随机选取若干个候选决策边界，找出其中最好的一个。</p>
+<h3 id="3-随机森林"><a href="#3-随机森林" class="headerlink" title="3. 随机森林"></a>3. 随机森林</h3><p>为了解决过拟合问题，现采用有放回的采样方式。</p>
+<p>假设有样本：</p>
+<script type="math/tex; mode=display">
+X=\{(X_1,y_1),(X_2,y_2),...,(X_n,y_n)\}</script><p>从中有放回地采样m次, 每次取k个，每次的样本为：</p>
+<script type="math/tex; mode=display">
+X_m=\{(X_{m1},y_{m1}),(X_{m2}y_{m2}),...,(X_{mk},y_{mk})\}</script><p>每次的采样结果对应一个决策树DT<sub>m</sub>，这些决策树组成了一个集合：</p>
+<script type="math/tex; mode=display">
+RF(X)=\{DT_1,DT_2,...,DT_m\}</script><p>这个集合叫做<strong>随机森林</strong>。</p>
+<p>当一个测试点进入随机森林之后，会通过森林中所有的决策树，每棵决策树对应一个分类结果。然后根据少数服从多数的原则，分类结果中频数最高的为最终分类结果。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
+<li>决策树/随机森林的逻辑比较简单，也许效果不是最好，但是可以作为对数据分布探索的首要尝试算法</li>
+<li>没有谈到代码实现部分，以后会补上</li>
+</ul>
+
       </div>
-    
-  </section>
-</article>
-
-          </div>
+      
+      
+        <br>
         
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
       
         
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
-
-
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/05/optimization/">
-      一些优化
-    </a>
-  </h2>
-
-
-      
-      <div class='new-meta-box'>
-        
-          
-        
-          
-            
-  <div class='new-meta-item author'>
-    
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
-    
-  </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-03-19T12:48:03+08:00">
   <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-05</p>
+    <i class="fas fa-clock" aria-hidden="true"></i>
+    <p>更新于 2020年3月19日</p>
   </a>
 </div>
 
-          
+        
+      
         
           
-            
   
-  <div class='new-meta-item category'>
-    <a href='/categories/%E6%AD%A3%E5%84%BF%E5%85%AB%E7%BB%8F%E5%AD%A6%E6%8A%80%E6%9C%AF/%E4%BB%A3%E7%A0%81review/' rel="nofollow">
-      <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>正儿八经学技术&nbsp;/&nbsp;代码review</p>
-    </a>
-  </div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="nofollow"><i class="fas fa-tag" aria-hidden="true"></i><p>机器学习</p></a></div>
 
 
-          
+        
+      
         
           
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
-      
-    </div>
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <div class="readmore">
-          <a href="/2019/12/05/optimization/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
     
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/react-native/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> react-native</a>
-        
-      </div>
-    
-  </section>
-</article>
-
-          </div>
-        
       
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
-
-
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/04/hexo-config/">
-      折腾hexo之三：配置与命令
-    </a>
-  </h2>
-
-
-      
-      <div class='new-meta-box'>
-        
+        <a class="-mob-share-qq" title="QQ好友" rel="external nofollow noopener noreferrer"
           
-        
+          href="http://connect.qq.com/widget/shareqq/index.html?url=kasimg.github.io/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/&title=决策树和随机森林 | Kasim&summary=年龄太大？不见
+长得不好看？不见
+收入太低？不见
+…
+人们在相亲的时候难免会做出以上的决策，当然，爱美之心人皆有之，而且人人都有追求更好物质生活的精神生活的权利。"
           
-            
-  <div class='new-meta-item author'>
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/qq.png">
+          
+        </a>
+      
     
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
+      
+        <a class="-mob-share-qzone" title="QQ空间" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=kasimg.github.io/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/&title=决策树和随机森林 | Kasim&summary=年龄太大？不见
+长得不好看？不见
+收入太低？不见
+…
+人们在相亲的时候难免会做出以上的决策，当然，爱美之心人皆有之，而且人人都有追求更好物质生活的精神生活的权利。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="微博" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=kasimg.github.io/2020/03/03/%E5%86%B3%E7%AD%96%E6%A0%91/&title=决策树和随机森林 | Kasim&summary=年龄太大？不见
+长得不好看？不见
+收入太低？不见
+…
+人们在相亲的时候难免会做出以上的决策，当然，爱美之心人皆有之，而且人人都有追求更好物质生活的精神生活的权利。"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/assets@19.1.9/logo/128/weibo.png">
+          
+        </a>
+      
     
   </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-04</p>
-  </a>
 </div>
 
-          
-        
-          
-            
-  
-  <div class='new-meta-item category'>
-    <a href='/categories/%E6%AD%A3%E5%84%BF%E5%85%AB%E7%BB%8F%E5%AD%A6%E6%8A%80%E6%9C%AF/' rel="nofollow">
-      <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>正儿八经学技术</p>
-    </a>
-  </div>
 
 
-          
         
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
       
     </div>
   </section>
 
 
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
       
       
-        <div class="readmore">
-          <a href="/2019/12/04/hexo-config/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/hexo/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> hexo</a>
-        
-      </div>
-    
-  </section>
-</article>
-
+          <div class="prev-next">
+              
+              
+                  <section class="next">
+                      <span class="art-item-right" aria-hidden="true">
+                          <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                          <h4>
+                              <a href="/2020/02/29/SVM/" rel="prev" title="对SVM的一些理解">
+                                  
+                                      对SVM的一些理解
+                                  
+                              </a>
+                          </h4>
+                          
+                              
+                              <h6 class="tags">
+                                  <a class="tag" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><i class="fas fa-tag fa-fw" aria-hidden="true"></i> 机器学习</a>
+                              </h6>
+                          
+                      </span>
+                  </section>
+              
           </div>
-        
       
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
+    </section>
+  </article>
 
 
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/04/sqlite-issues/">
-      坑坑洼洼的react native之一：和sqlite不得不说的故事
-    </a>
-  </h2>
+
+  <!-- 显示推荐文章和评论 -->
 
 
-      
-      <div class='new-meta-box'>
-        
-          
-        
-          
-            
-  <div class='new-meta-item author'>
-    
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
-    
-  </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-04</p>
-  </a>
-</div>
-
-          
-        
-          
-            
-  
-  <div class='new-meta-item category'>
-    <a href='/categories/%E6%AD%A3%E5%84%BF%E5%85%AB%E7%BB%8F%E5%AD%A6%E6%8A%80%E6%9C%AF/' rel="nofollow">
-      <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>正儿八经学技术</p>
-    </a>
-  </div>
-
-
-          
-        
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
-      
-    </div>
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <div class="readmore">
-          <a href="/2019/12/04/sqlite-issues/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/react-native/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> react native</a>
-        
-          <a href="/tags/sqlite/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> sqlite</a>
-        
-      </div>
-    
-  </section>
-</article>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
-
-
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/03/beautify/">
-      折腾hexo之二：更换主题
-    </a>
-  </h2>
-
-
-      
-      <div class='new-meta-box'>
-        
-          
-        
-          
-            
-  <div class='new-meta-item author'>
-    
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
-    
-  </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-03</p>
-  </a>
-</div>
-
-          
-        
-          
-            
-  
-  <div class='new-meta-item category'>
-    <a href='/categories/%E8%8A%B1%E9%87%8C%E8%83%A1%E5%93%A8%E7%9E%8E%E6%8A%98%E8%85%BE/' rel="nofollow">
-      <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>花里胡哨瞎折腾</p>
-    </a>
-  </div>
-
-
-          
-        
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
-      
-    </div>
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      <p>作为一个颜控，hexo的默认主题并不能满足我，于是我开启了对博客颜值的追求之旅。</p>
-      
-        <div class="readmore">
-          <a href="/2019/12/03/beautify/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/hexo/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> hexo</a>
-        
-      </div>
-    
-  </section>
-</article>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <article class="post reveal ">
-  
-
-
-  <section class='meta'>
-    
-    
-    <div class="meta" id="header-meta">
-      
-        
-  <h2 class="title">
-    <a href="/2019/12/02/%E9%81%87%E8%A7%81hexo/">
-      折腾hexo之一：遇见hexo
-    </a>
-  </h2>
-
-
-      
-      <div class='new-meta-box'>
-        
-          
-        
-          
-            
-  <div class='new-meta-item author'>
-    
-      <a href="/kasimg.github.io" rel="nofollow">
-        
-          <i class="fas fa-user" aria-hidden="true"></i>
-        
-        <p>Kasim</p>
-      </a>
-    
-  </div>
-
-
-          
-        
-          
-            <div class="new-meta-item date">
-  <a class='notlink'>
-    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2019-12-02</p>
-  </a>
-</div>
-
-          
-        
-          
-            
-  
-  <div class='new-meta-item category'>
-    <a href='/categories/%E6%AD%A3%E5%84%BF%E5%85%AB%E7%BB%8F%E5%AD%A6%E6%8A%80%E6%9C%AF/' rel="nofollow">
-      <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>正儿八经学技术</p>
-    </a>
-  </div>
-
-
-          
-        
-          
-            
-
-          
-        
-          
-            
-
-          
-        
-      </div>
-      
-        <hr>
-      
-    </div>
-  </section>
-
-
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      <p>一直想搭建一个属于自己的博客，今天终于把这个想法付诸实践，整理一下流程以做纪念，也作为本博客的第一篇文章。</p>
-      
-        <div class="readmore">
-          <a href="/2019/12/02/%E9%81%87%E8%A7%81hexo/" class="flat-box">
-            <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-    
-      <div class="full-width auto-padding tags">
-        
-          <a href="/tags/hexo/" rel="nofollow"><i class="fas fa-tag fa-fw"></i> hexo</a>
-        
-      </div>
-    
-  </section>
-</article>
-
-          </div>
-        
-      
-    
-  </section>
-  
-    
-    <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-    
-    
 
   
 
 
-	
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+  <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      preferredFont: "TeX",
+      availableFonts: ["STIX","TeX"],
+      linebreaks: { automatic:true },
+      EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+      inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+      processEscapes: true,
+      ignoreClass: "tex2jax_ignore|dno",
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: { autoNumber: "AMS" },
+      noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+      Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += (all[i].SourceElement().parentNode.className ? ' ' : '') + 'has-jax';
+    }
+  });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+  <script>
+    window.subData = {
+      title: '决策树和随机森林',
+      tools: true
+    }
+  </script>
+
+
 </div>
 <aside class='l_side'>
   
@@ -1088,6 +794,25 @@
           
         
           
+          
+            
+              
+  <section class='widget toc-wrapper'>
+    
+<header class='pure'>
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;本文目录</div>
+  
+    <!-- <div class='wrapper'><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer noopener" href="javascript:void(0)" target="_blank"><i class="fas fa-thumbtack fa-fw"></i></a></div> -->
+  
+</header>
+
+    <div class='content pure'>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-什么是决策树"><span class="toc-text">1. 什么是决策树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用决策树"><span class="toc-text">2. 使用决策树</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-分类问题"><span class="toc-text">2.1 分类问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-信息熵"><span class="toc-text">2.2 信息熵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-特征的信息熵"><span class="toc-text">2.3 特征的信息熵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4-信息增益和信息增益比"><span class="toc-text">2.4 信息增益和信息增益比</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-5-特征连续的决策边界选取"><span class="toc-text">2.5 特征连续的决策边界选取</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-随机森林"><span class="toc-text">3. 随机森林</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
+    </div>
+  </section>
+
+
+            
           
         
           
@@ -1262,6 +987,46 @@
           
         
       
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+      
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+          
+          
+        
+      
     
 
   
@@ -1314,14 +1079,6 @@
   </div> -->
 </footer>
 <script>setLoadingBarProgress(80);</script>
-
-
-
-	<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-	
-
-	
-
 
       <script>setLoadingBarProgress(60);</script>
     </div>
